@@ -24,8 +24,32 @@ uniform int uNumMasks;
 uniform sampler2D uMaskTexture0;
 uniform sampler2D uMaskTexture1;
 uniform sampler2D uMaskTexture2;
+uniform float uMarginSize;
 
 out vec4 fragColor;
+
+bool checkNeighborhood(vec2 coord, sampler2D maskTexture) {
+    float margin = uMarginSize / uSize.x; // Convert margin to UV space
+    if(texture(maskTexture, vec2(coord.y, coord.x)).r > 0.0) {
+        return true;
+    }
+    
+    // Check in a square around the current pixel
+    for(float x = -margin; x <= margin; x += margin/2.0) {
+        for(float y = -margin; y <= margin; y += margin/2.0) {
+            vec2 sampleCoord = vec2(coord.y + y, coord.x + x);
+            // Ensure we don't sample outside texture bounds
+            if(sampleCoord.x >= 0.0 && sampleCoord.x <= 1.0 && 
+               sampleCoord.y >= 0.0 && sampleCoord.y <= 1.0) {
+                if(texture(maskTexture, sampleCoord).r > 0.0) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 
 void main() {
   vec4 color = texture(uSampler, vTexCoord);
@@ -42,20 +66,21 @@ void main() {
   vec4 frameColor = texture(uSampler, sampleCoord);
   color = frameColor;
 
-  if(uNumMasks > 0) {
-    color1 = texture(uMaskTexture0, vec2(vTexCoord.y, vTexCoord.x));
-  }
-  if(uNumMasks > 1) {
-    color2 = texture(uMaskTexture1, vec2(vTexCoord.y, vTexCoord.x));    
-  }
-  if(uNumMasks > 2) {
-    color3 = texture(uMaskTexture2, vec2(vTexCoord.y, vTexCoord.x));
-  }
+bool overlap = false;
 
-  bool overlap = (color1.r > 0.0f || color2.r > 0.0f || color3.r > 0.0f);
-  if(overlap) {
-    fragColor = color;
-  } else {
-    fragColor = vec4(0.0f);
-  }
+    if(uNumMasks > 0) {
+        overlap = overlap || checkNeighborhood(vTexCoord, uMaskTexture0);
+    }
+    if(uNumMasks > 1) {
+        overlap = overlap || checkNeighborhood(vTexCoord, uMaskTexture1);
+    }
+    if(uNumMasks > 2) {
+        overlap = overlap || checkNeighborhood(vTexCoord, uMaskTexture2);
+    }
+
+    if(overlap) {
+        fragColor = color;
+    } else {
+        fragColor = vec4(0.0f);
+    }
 }

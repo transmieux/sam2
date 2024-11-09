@@ -20,7 +20,7 @@ type EffectLayers = {
   highlight: keyof Effects;
 };
 
-const API_URL = import.meta.env.APP_URL;
+const API_URL = import.meta.env.VITE_APP_URL;
 
 export const DEMO_SHORT_NAME = 'SAM 2 Demo';
 export const RESEARCH_BY_META_AI = 'By Meta FAIR';
@@ -40,7 +40,7 @@ export const demoObjectLimit = 3;
 
 export const DEFAULT_EFFECT_LAYERS: EffectLayers = {
   background: 'Original',
-  highlight: 'Overlay',
+  highlight: 'PixelateMask',
 };
 
 export const MAX_UPLOAD_FILE_SIZE = '70MB';

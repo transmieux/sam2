@@ -26,7 +26,7 @@ import {RLEObject, decode} from '@/jscocotools/mask';
 import invariant from 'invariant';
 import {CanvasForm} from 'pts';
 
-export default class PixelateMaskGLEffect extends BaseGLEffect {
+export default class MarginPixelEffect extends BaseGLEffect {
   private _numMasks: number = 0;
   private _numMasksUniformLocation: WebGLUniformLocation | null = null;
   private _marginSizeUniformLocation: WebGLUniformLocation | null = null;
@@ -52,7 +52,7 @@ export default class PixelateMaskGLEffect extends BaseGLEffect {
     this._numMasksUniformLocation = gl.getUniformLocation(program, 'uNumMasks');
     this._marginSizeUniformLocation = gl.getUniformLocation(program, 'uMarginSize');
     gl.uniform1i(this._numMasksUniformLocation, this._numMasks);
-    gl.uniform1f(this._marginSizeUniformLocation, 5.0);
+    // gl.uniform1f(this._marginSizeUniformLocation, 10.0);
 
     // We know the max number of textures, pre-allocate 3.
     this._maskTextures = preAllocateTextures(gl, 3);
@@ -71,11 +71,13 @@ export default class PixelateMaskGLEffect extends BaseGLEffect {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     const blockSize =[5, 10, 15, 20, 25, 30][this.variant];
+    const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
 
     // dynamic uniforms per frame
     gl.uniform1i(this._numMasksUniformLocation, context.masks.length);
-    gl.uniform1f(this._marginSizeUniformLocation, 5.0);
+    // gl.uniform1f(this._marginSizeUniformLocation, 10.0);
     gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+    gl.uniform1f(this._marginSizeUniformLocation, marginSize);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);

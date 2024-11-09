@@ -154,7 +154,7 @@ export const activeBackgroundEffectAtom = atom<EffectConfig>({
 });
 
 export const activeHighlightEffectAtom = atom<EffectConfig>({
-  name: 'Overlay',
+  name: 'PixelateMask',
   variant: 0,
   numVariants: 0,
 });

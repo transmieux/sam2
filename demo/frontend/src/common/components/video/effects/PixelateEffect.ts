@@ -25,10 +25,10 @@ import invariant from 'invariant';
 import {CanvasForm} from 'pts';
 
 export default class PixelateEffect extends BaseGLEffect {
-  private _blockSize: number = 10.0;
+  private _blockSize: number = 5.0;
 
   constructor() {
-    super(3);
+    super(6);
 
     this.vertexShaderSource = vertexShaderSource;
     this.fragmentShaderSource = fragmentShaderSource;
@@ -56,7 +56,7 @@ export default class PixelateEffect extends BaseGLEffect {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const blockSize = [10, 20, 30][this.variant];
+    const blockSize = [5, 10, 15, 20, 25, 30][this.variant];
 
     // dynamic uniforms per frame
     gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);

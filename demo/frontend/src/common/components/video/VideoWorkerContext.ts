@@ -127,7 +127,7 @@ export default class VideoWorkerContext {
   constructor() {
     this._effects = [
       AllEffects.Original, // Image as background
-      AllEffects.Overlay, // Masks on top
+      AllEffects.PixelateMask, // Masks on top
     ];
 
     // Loading watermark fonts. This is going to be async, but by the time of
