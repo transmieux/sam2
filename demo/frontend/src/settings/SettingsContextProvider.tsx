@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 import emptyFunction from '@/common/utils/emptyFunction';
+import {
+  endFrameStateAtom,
+  marginStateAtom,
+  multiRangeStateAtom,
+  resoultionStateAtom,
+  startFrameStateAtom,
+} from '@/demo/atoms';
 import {INFERENCE_API_ENDPOINT, VIDEO_API_ENDPOINT} from '@/demo/DemoConfig';
 import SettingsModal from '@/settings/SettingsModal';
 import {
@@ -22,6 +29,7 @@ import {
   Settings,
   settingsReducer,
 } from '@/settings/SettingsReducer';
+import {useAtom} from 'jotai';
 import {
   PropsWithChildren,
   createContext,
@@ -37,6 +45,16 @@ type ContextProps = {
   openModal: () => void;
   closeModal: () => void;
   hasChanged: boolean;
+  resolution: number;
+  margin: number;
+  setResolution: (value: number) => void;
+  setMargin: (value: number) => void;
+  multiRange: number[];
+  setMultiRange: (value: number[]) => void;
+  startFrame: number;
+  endFrame: number;
+  setStartFrame: (value: number) => void;
+  setEndFrame: (value: number) => void;
 };
 
 export const SettingsContext = createContext<ContextProps>({
@@ -45,11 +63,26 @@ export const SettingsContext = createContext<ContextProps>({
   openModal: emptyFunction,
   closeModal: emptyFunction,
   hasChanged: false,
+  resolution: 1,
+  margin: 1,
+  setResolution: emptyFunction,
+  setMargin: emptyFunction,
+  multiRange: [0, 10],
+  setMultiRange: emptyFunction,
+  startFrame: 0,
+  endFrame: 1,
+  setStartFrame: emptyFunction,
+  setEndFrame: emptyFunction,
 });
 
 type Props = PropsWithChildren;
 
 export default function SettingsContextProvider({children}: Props) {
+  const [resolution, setResolution] = useAtom(resoultionStateAtom);
+  const [margin, setMargin] = useAtom(marginStateAtom);
+  const [multiRange, setMultiRange] = useAtom(multiRangeStateAtom);
+  const [startFrame, setStartFrame] = useAtom(startFrameStateAtom);
+  const [endFrame, setEndFrame] = useAtom(endFrameStateAtom);
   const [state, dispatch] = useImmerReducer(
     settingsReducer,
     DEFAULT_SETTINGS,
@@ -84,8 +117,29 @@ export default function SettingsContextProvider({children}: Props) {
       openModal,
       closeModal: handleCloseModal,
       hasChanged,
+      resolution,
+      margin,
+      setResolution,
+      setMargin,
+      multiRange,
+      setMultiRange,
+      startFrame,
+      setStartFrame,
+      endFrame,
+      setEndFrame,
     }),
-    [state, dispatch, openModal, handleCloseModal, hasChanged],
+    [
+      state,
+      dispatch,
+      openModal,
+      handleCloseModal,
+      hasChanged,
+      resolution,
+      margin,
+      startFrame,
+      endFrame,
+      multiRange,
+    ],
   );
 
   return (

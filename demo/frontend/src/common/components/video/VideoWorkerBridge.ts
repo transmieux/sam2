@@ -334,6 +334,23 @@ export default class VideoWorkerBridge extends EventEmitter<VideoWorkerEventMap>
     });
   }
 
+  startFrame(frame: number): void {
+    this.sendRequest('startFrame', { frame })
+  }
+
+  endFrame(frame: number): void {
+    this.sendRequest('endFrame', { frame })
+  }
+
+  resolution(num: number): void {
+    this.sendRequest('resolution', { num })
+  }
+
+  margin(num: number): void {
+    this.sendRequest('margin', { num })
+  }
+
+
   startSession(videoUrl: string): Promise<string | null> {
     return new Promise(resolve => {
       const handleResponse = (

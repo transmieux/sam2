@@ -63,7 +63,7 @@ import {THEME_COLORS} from '@/theme/colors';
 import invariant from 'invariant';
 import {IEnvironment, commitMutation, graphql} from 'relay-runtime';
 
-type Options = Pick<TrackerOptions, 'inferenceEndpoint'>;
+type Options = TrackerOptions;
 
 type Session = {
   id: string | null;

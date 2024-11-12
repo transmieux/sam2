@@ -52,30 +52,34 @@ export default class PixelateMaskGLEffect extends BaseGLEffect {
     this._numMasksUniformLocation = gl.getUniformLocation(program, 'uNumMasks');
     this._marginSizeUniformLocation = gl.getUniformLocation(program, 'uMarginSize');
     gl.uniform1i(this._numMasksUniformLocation, this._numMasks);
-    gl.uniform1f(this._marginSizeUniformLocation, 5.0);
 
     // We know the max number of textures, pre-allocate 3.
     this._maskTextures = preAllocateTextures(gl, 3);
   }
 
-  apply(form: CanvasForm, context: EffectFrameContext, _tracklets: Tracklet[]) {
+  apply(form: CanvasForm, frameContext: EffectFrameContext, _tracklets: Tracklet[]) {
+    const { frameIndex } = frameContext;
     const gl = this._gl;
     const program = this._program;
 
     if (!program) {
       return;
     }
-    invariant(gl !== null, 'WebGL2 context is required');
 
+    if (frameContext.margin === null) {
+      return
+    }
+    invariant(gl !== null, 'WebGL2 context is required');
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const blockSize =[5, 10, 15, 20, 25, 30][this.variant];
+    const blockSize = [5, 10, 15, 20, 25, 30][this.variant];
+    const marginSize = [5, 10, 15, 20, 25, 30][frameContext.margin];
 
     // dynamic uniforms per frame
-    gl.uniform1i(this._numMasksUniformLocation, context.masks.length);
-    gl.uniform1f(this._marginSizeUniformLocation, 5.0);
+    gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
     gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+    gl.uniform1f(this._marginSizeUniformLocation, marginSize);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);
@@ -83,55 +87,61 @@ export default class PixelateMaskGLEffect extends BaseGLEffect {
       gl.TEXTURE_2D,
       0,
       gl.RGBA,
-      context.width,
-      context.height,
+      frameContext.width,
+      frameContext.height,
       0,
       gl.RGBA,
       gl.UNSIGNED_BYTE,
-      context.frame,
+      frameContext.frame,
     );
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    // Create and bind 2D textures for each mask
-    context.masks.forEach((mask, index) => {
-      const decodedMask = decode([mask.bitmap as RLEObject]);
-      const maskData = decodedMask.data as Uint8Array;
-      gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
-      gl.bindTexture(gl.TEXTURE_2D, this._maskTextures[index]);
-      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.LUMINANCE,
-        context.height,
-        context.width,
-        0,
-        gl.LUMINANCE,
-        gl.UNSIGNED_BYTE,
-        maskData,
-      );
 
-      // dynamic uniforms per mask
-      gl.uniform1i(
-        gl.getUniformLocation(program, `uMaskTexture${index}`),
-        this._masksTextureUnitStart + index,
-      );
-    });
+    if (frameContext?.startFrame === null || frameContext?.endFrame === null) {
+      return;
+    }
 
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    if (frameIndex >= frameContext?.startFrame && frameIndex <= frameContext?.endFrame) {
+      // Create and bind 2D textures for each mask
+      frameContext.masks.forEach((mask, index) => {
+        const decodedMask = decode([mask.bitmap as RLEObject]);
+        const maskData = decodedMask.data as Uint8Array;
+        gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+        gl.bindTexture(gl.TEXTURE_2D, this._maskTextures[index]);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.LUMINANCE,
+          frameContext.height,
+          frameContext.width,
+          0,
+          gl.LUMINANCE,
+          gl.UNSIGNED_BYTE,
+          maskData,
+        );
 
-    // Unbind textures
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    context.masks.forEach((_, index) => {
-      gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+        // dynamic uniforms per mask
+        gl.uniform1i(
+          gl.getUniformLocation(program, `uMaskTexture${index}`),
+          this._masksTextureUnitStart + index,
+        );
+      });
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      // Unbind textures
       gl.bindTexture(gl.TEXTURE_2D, null);
-    });
+      frameContext.masks.forEach((_, index) => {
+        gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+      });
 
-    const ctx = form.ctx;
-    invariant(this._canvas !== null, 'canvas is required');
-    ctx.drawImage(this._canvas, 0, 0);
+      const ctx = form.ctx;
+      invariant(this._canvas !== null, 'canvas is required');
+      ctx.drawImage(this._canvas, 0, 0);
+    }
   }
 
   async cleanup(): Promise<void> {

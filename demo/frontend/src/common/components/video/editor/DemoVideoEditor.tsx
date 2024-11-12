@@ -93,7 +93,7 @@ type Props = {
 };
 
 export default function DemoVideoEditor({video: inputVideo}: Props) {
-  const {settings} = useSettingsContext();
+  const {settings, startFrame, endFrame, resolution, margin} = useSettingsContext();
   const video = useVideo();
 
   const [isSessionStartFailed, setIsSessionStartFailed] =
@@ -169,6 +169,11 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
     video?.initializeTracker('SAM 2', {
       inferenceEndpoint: settings.inferenceAPIEndpoint,
     });
+
+    video?.startFrame(startFrame);
+    video?.endFrame(endFrame);
+    video?.resolution(resolution);
+    video?.margin(margin);
 
     video?.startSession(inputVideo.path);
 
@@ -301,7 +306,7 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
           loading={session == null}>
           <div className="bg-graydark-800 w-full">
             <VideoFilmstripWithPlayback />
-            <TrackletsAnnotation />
+            <TrackletsAnnotation inputVideo={inputVideo} />
           </div>
         </VideoEditor>
       </div>

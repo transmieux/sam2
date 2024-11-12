@@ -116,6 +116,10 @@ export type VideoRef = {
   // Tracker
   initializeTracker(name: keyof Trackers, options?: TrackerOptions): void;
   startSession(videoUrl: string): Promise<string | null>;
+  startFrame(frame:number): void;
+  endFrame(frame:number): void;
+  resolution(num:number): void;
+  margin(num:number): void;
   closeSession(): void;
   logAnnotations(): void;
   createTracklet(): Promise<BaseTracklet>;
@@ -228,6 +232,18 @@ export default forwardRef<VideoRef, Props>(function Video(
       // Tracker
       initializeTracker(name: keyof Trackers, options: TrackerOptions): void {
         bridge.initializeTracker(name, options);
+      },
+      startFrame(frame:number):void{
+        bridge.startFrame(frame);
+      },
+      endFrame(frame:number):void{
+        bridge.endFrame(frame);
+      },
+      resolution(num:number):void{
+        bridge.resolution(num);
+      },
+      margin(num:number):void{
+        bridge.margin(num);
       },
       startSession(videoUrl: string): Promise<string | null> {
         return bridge.startSession(videoUrl);

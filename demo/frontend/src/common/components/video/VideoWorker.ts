@@ -98,6 +98,32 @@ self.addEventListener(
           }
           break;
         }
+
+        case 'startFrame': {
+          const {frame} = event.data;
+          context.setStartFrame(frame || 0)
+          break;
+        }
+
+        case 'endFrame': {
+          const {frame} = event.data;
+          context.setEndFrame(frame || 100)
+          break;
+        }
+
+        case 'resolution': {
+          const {num} = event.data;
+          context.setResolution(num || 1)
+          break;
+        }
+
+        case 'margin': {
+          console.log("event.data", event.data);
+          const {num} = event.data;
+          context.setMargin(num || 1)
+          break;
+        }
+
         case 'startSession': {
           const {videoUrl} = event.data;
           await tracker?.startSession(videoUrl);

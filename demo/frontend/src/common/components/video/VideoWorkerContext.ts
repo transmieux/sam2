@@ -104,9 +104,28 @@ export default class VideoWorkerContext {
   private _canvasBackground: OffscreenCanvas | null = null;
   private _allowAnimation: boolean = false;
   private _currentSegmetationPoint: EffectActionPoint | null = null;
+  private startFrame: number | null = 0;
+  private endFrame: number | null = null;
+  private resolution: number | null = 1;
+  private margin: number | null = 1;
 
   private _effects: Effect[];
   private _tracklets: Tracklet[] = [];
+
+  public setStartFrame: (value: number) => void = (value) => {
+    this.startFrame = value;
+  };
+  public setEndFrame: (value: number) => void = (value) => {
+    this.endFrame = value;
+  };
+
+  public setResolution: (value: number) => void = (value) => {
+    this.resolution = value;
+  };
+
+  public setMargin: (value: number) => void = (value) => {
+    this.margin = value;
+  };
 
   public get width(): number {
     return this._decodedVideo?.width ?? 0;
@@ -676,6 +695,10 @@ export default class VideoWorkerContext {
         width: frameBitmap.width,
         height: frameBitmap.height,
         actionPoint: null,
+        startFrame: this.startFrame,
+        endFrame: this.endFrame,
+        resolution: this.resolution,
+        margin: this.margin
       };
 
       // Allows animation within a single frame.
@@ -830,8 +853,8 @@ export default class VideoWorkerContext {
       } else if (i === 1) {
         this._stats.effect1?.begin();
       }
-
-      effect.apply(form, effectParams, tracklets);
+      const effectdata = { ...effectParams, startFrame: this.startFrame, endFrame: this.endFrame, resolution: this.resolution, margin: this.margin }
+      effect.apply(form, effectdata, tracklets);
 
       if (i === 0) {
         this._stats.effect0?.end();
