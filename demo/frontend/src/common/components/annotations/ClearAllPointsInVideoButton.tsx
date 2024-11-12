@@ -72,7 +72,7 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
       <Button
         color="ghost"
         onClick={handleRestart}
-        className="!px-4 !rounded-full font-medium text-white hover:bg-black"
+        className="!px-4 !rounded-full font-medium text-black hover:bg-[#f0f0f0]"
         startIcon={isLoading ? <Loading size="sm" /> : <Reset size={20} />}>
         Start over
       </Button>

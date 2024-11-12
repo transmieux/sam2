@@ -37,12 +37,14 @@ const styles = stylex.create({
   },
   messageContainer: {
     padding: '20px 20px',
-    color: '#FFF',
+    color: '#000',
     borderRadius: '8px',
     fontSize: '0.9rem',
     maxWidth: 400,
     border: '2px solid transparent',
-    background: gradients['yellowTeal'],
+    // background: gradients['yellowTeal'],
+    background: "#fff",
+
   },
   messageWarningContainer: {
     background: '#FFDC32',
@@ -78,9 +80,9 @@ export default function MessagesSnackbar() {
   const closeIcon = (
     <Close
       size={24}
-      color={message.type === 'warning' ? color['gray-900'] : 'white'}
+      color={message.type === 'warning' ? color['gray-900'] : ''}
       opacity={1}
-      className="z-20 hover:text-gray-300 color-white cursor-pointer !opacity-100 shrink-0"
+      className="z-20 hover:text-gray-500 color-white cursor-pointer !opacity-100 shrink-0"
       onClick={clearMessage}
     />
   );

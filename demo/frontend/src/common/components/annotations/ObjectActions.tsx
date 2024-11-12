@@ -86,7 +86,7 @@ export default function ObjectActions({objectId, active}: Props) {
   return (
     <div>
       {active && (
-        <div className="text-sm mt-1 leading-snug text-gray-400 hidden md:block ml-2 md:mb-4">
+        <div className="text-sm mt-1 leading-snug text-gray-900 hidden md:block ml-2 md:mb-4">
           Select <AddFilled size={14} className="inline" /> to add areas to the
           object and <SubtractFilled size={14} className="inline" /> to remove
           areas from the object in the video. Click on an existing point to

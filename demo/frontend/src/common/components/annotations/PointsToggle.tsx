@@ -22,13 +22,13 @@ export default function PointsToggle() {
   const isPositive = labelType === 'positive';
 
   const buttonStyle = (selected: boolean) =>
-    `btn-md bg-graydark-800 !text-white md:px-2 lg:px-4 py-0.5 ${selected ? `border border-white hover:bg-graydark-800` : `border-graydark-700 hover:bg-graydark-700`}`;
+    `btn-md bg-graydark-800 md:px-2 lg:px-4 py-0.5 ${selected ? `border border-white hover:bg-graydark-800` : `border-red-400 hover:bg-graydark-50`}`;
 
   return (
     <div className="flex items-center w-full md:ml-2">
       <div className="join group grow gap-[1px]">
         <button
-          className={`w-1/2  btn join-item text-white ${buttonStyle(isPositive)}`}
+          className={`w-1/2  btn join-item text-blue-500 ${buttonStyle(isPositive)}`}
           onClick={() => setLabelType('positive')}>
           <AddFilled size={24} className="text-blue-500" /> Add
         </button>

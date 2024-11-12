@@ -39,7 +39,7 @@ const styles = stylex.create({
     borderRadius: 16,
     border: '2px solid transparent',
     background:
-      'linear-gradient(#1A1C1F, #1A1C1F) padding-box, linear-gradient(to right bottom, #FB73A5,#595FEF,#94EAE2,#FCCB6B) border-box',
+      'linear-gradient(#FFFFF7, #FFFFF7) padding-box, linear-gradient(to right bottom, #FB73A5,#595FEF,#94EAE2,#FCCB6B) border-box',
   },
   closeButton: {
     position: 'absolute',
@@ -131,7 +131,7 @@ export default function DemoVideoGalleryModal({
         <div onClick={closeModal} {...stylex.props(styles.closeButton)}>
           <Close size={28} />
         </div>
-        <Modal.Body>
+        <Modal.Body> 
           <div {...stylex.props(styles.galleryContainer)}>
             <DemoVideoGallery
               showUploadInGallery={showUploadInGallery}

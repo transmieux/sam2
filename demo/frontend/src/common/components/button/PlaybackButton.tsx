@@ -88,7 +88,7 @@ export default function PlaybackButton() {
 
 function getButtonStyles(isDisabled: boolean): string {
   if (isDisabled) {
-    return '!bg-gray-600 !text-graydark-700';
+    return '!text-black border border-black hover:bg-[#f0f0f0]';
   }
-  return `!text-black bg-white`;
+  return `!text-black bg-[#f0f0f0]`;
 }
