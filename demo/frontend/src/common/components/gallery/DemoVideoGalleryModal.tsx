@@ -129,7 +129,7 @@ export default function DemoVideoGalleryModal({
       <VideoGalleryModalTrigger onClick={handleOpenVideoGalleryModal} />
       <Modal ref={modalRef} {...stylex.props(styles.container)}>
         <div onClick={closeModal} {...stylex.props(styles.closeButton)}>
-          <Close size={28} />
+          <Close size={28} className='text-black'/>
         </div>
         <Modal.Body> 
           <div {...stylex.props(styles.galleryContainer)}>
