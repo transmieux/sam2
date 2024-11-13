@@ -46,7 +46,7 @@ export default function MoreOptionsToolbar({onTabChange}: Props) {
           showProgressChip={false}
         />
         <ShareSection />
-        {!isMobile && <div className="h-[1px] bg-black mt-4 mb-8"></div>}
+        {!isMobile && <div className="h-[1px] bg-gray-300 mt-4 mb-8"></div>}
         <TryAnotherVideoSection onTabChange={onTabChange} />
       </div>
       {!isMobile && (

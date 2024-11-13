@@ -154,7 +154,7 @@ export const activeBackgroundEffectAtom = atom<EffectConfig>({
 });
 
 export const activeHighlightEffectAtom = atom<EffectConfig>({
-  name: 'Overlay',
+  name: 'PixelateMask',
   variant: 0,
   numVariants: 0,
 });
@@ -181,3 +181,13 @@ export const messageMapAtom = atom<MessagesEventMap>(defaultMessageMap);
 export const uploadingStateAtom = atom<'default' | 'uploading' | 'error'>(
   'default',
 );
+
+// #####################
+// range [ resolution, margin ]
+// #####################
+
+export const resoultionStateAtom = atom<number>(5);
+export const marginStateAtom = atom<number>(5);
+export const startFrameStateAtom = atom<number>(0);
+export const endFrameStateAtom = atom<number>(100);
+export const multiRangeStateAtom = atom<number[]>([0, 10]);

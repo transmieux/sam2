@@ -61,8 +61,8 @@ const styles = stylex.create({
     flexDirection: 'column',
     overflow: 'auto',
     width: '100%',
-    borderColor: color['gray-800'],
-    backgroundColor: color['gray-800'],
+    borderColor: color['white-100'],
+    backgroundColor: color['white-100'],
     borderWidth: 8,
     borderRadius: 12,
     '@media screen and (max-width: 768px)': {
@@ -93,7 +93,7 @@ type Props = {
 };
 
 export default function DemoVideoEditor({video: inputVideo}: Props) {
-  const {settings} = useSettingsContext();
+  const {settings, startFrame, endFrame, resolution, margin} = useSettingsContext();
   const video = useVideo();
 
   const [isSessionStartFailed, setIsSessionStartFailed] =
@@ -169,6 +169,11 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
     video?.initializeTracker('SAM 2', {
       inferenceEndpoint: settings.inferenceAPIEndpoint,
     });
+
+    video?.startFrame(startFrame);
+    video?.endFrame(endFrame);
+    video?.resolution(resolution);
+    video?.margin(margin);
 
     video?.startSession(inputVideo.path);
 
@@ -299,9 +304,9 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
           video={inputVideo}
           layers={layers}
           loading={session == null}>
-          <div className="bg-graydark-800 w-full">
+          <div className="bg-[#fcfcfc] w-full">
             <VideoFilmstripWithPlayback />
-            <TrackletsAnnotation />
+            <TrackletsAnnotation inputVideo={inputVideo} />
           </div>
         </VideoEditor>
       </div>

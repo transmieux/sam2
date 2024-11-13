@@ -20,7 +20,7 @@ import {useAtomValue} from 'jotai';
 import {useMemo} from 'react';
 import {Loading} from 'react-daisyui';
 
-const TOTAL_DEMO_STEPS = 3;
+const TOTAL_DEMO_STEPS = 2;
 
 export default function ToolbarProgressChip() {
   const [toolbarIndex] = useToolbarTabs();
@@ -38,7 +38,7 @@ export default function ToolbarProgressChip() {
   }
 
   return (
-    <span className="inline-flex items-center justify-center rounded-full text-xs md:text-sm font-medium bg-white text-black w-10 md:w-12 h-5 md:h-6 mr-2 shrink-0 ">
+    <span className="inline-flex items-center justify-center rounded-full text-xs md:text-sm font-medium bg-[#f0f0f0] text-black w-10 md:w-12 h-5 md:h-6 mr-2 shrink-0 ">
       {showLoader ? (
         <Loading className="w-2 md:w-4" />
       ) : (

@@ -32,6 +32,7 @@ import ReplaceGLEffect from './ReplaceGLEffect';
 import ScopeGLEffect from './ScopeGLEffect';
 import SobelEffect from './SobelEffect';
 import VibrantMaskEffect from './VibrantMaskEffect';
+import MarginPixelEffect from './MarginPixelEffect';
 
 export type Effects = {
   /* Backgrounds */
@@ -53,6 +54,7 @@ export type Effects = {
   Replace: Effect;
   Burst: Effect;
   PixelateMask: Effect;
+  MarginPixel: Effect;
   Arrow: Effect;
 
   /* More Effects */
@@ -79,6 +81,7 @@ export default {
   Replace: new ReplaceGLEffect(),
   Burst: new BurstGLEffect(),
   PixelateMask: new PixelateMaskGLEffect(),
+  MarginPixel: new MarginPixelEffect(),
   Arrow: new ArrowGLEffect(),
 
   /* More Effects */

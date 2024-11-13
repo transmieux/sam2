@@ -180,7 +180,7 @@ export default function DemoVideoGallery({
       <div {...stylex.props(styles.albumContainer)}>
         <div className="pt-0 md:px-16 md:pt-8 md:pb-8">
           <div {...stylex.props(styles.headerContainer)}>
-            <h3 className="mb-2">
+            <h3 className="mb-2 text-gray-700">
               Select a video to try{' '}
               <span className="hidden md:inline">
                 with the {DEMO_SHORT_NAME}

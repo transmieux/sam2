@@ -26,7 +26,7 @@ import {RLEObject, decode} from '@/jscocotools/mask';
 import invariant from 'invariant';
 import {CanvasForm} from 'pts';
 
-export default class PixelateMaskGLEffect extends BaseGLEffect {
+export default class MarginPixelEffect extends BaseGLEffect {
   private _numMasks: number = 0;
   private _numMasksUniformLocation: WebGLUniformLocation | null = null;
   private _marginSizeUniformLocation: WebGLUniformLocation | null = null;
@@ -66,22 +66,24 @@ export default class PixelateMaskGLEffect extends BaseGLEffect {
       return;
     }
 
-    if (frameContext.margin === null) {
+    if (frameContext.resolution === null) {
       return
     }
+
     invariant(gl !== null, 'WebGL2 context is required');
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // const blockSize = [5, 10, 15, 20, 25, 30][frameContext.resolution];
+    // const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
+   
+    const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][frameContext.resolution];
     
-    // const blockSize = [5, 10, 15, 20, 25, 30][this.variant];
-    // const marginSize = [5, 10, 15, 20, 25, 30][frameContext.margin];
-    
-    const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][this.variant];
-    
-    const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][frameContext.margin];
+    const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][this.variant];
 
     // dynamic uniforms per frame
     gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
+    // gl.uniform1f(this._marginSizeUniformLocation, 10.0);
     gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
     gl.uniform1f(this._marginSizeUniformLocation, marginSize);
 

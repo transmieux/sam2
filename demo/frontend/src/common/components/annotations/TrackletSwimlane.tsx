@@ -30,7 +30,7 @@ const styles = stylex.create({
     width: w[12],
     textAlign: 'center',
     fontSize: '10px',
-    color: 'white',
+    color: 'black',
   },
   swimlaneContainer: {
     flexGrow: 1,

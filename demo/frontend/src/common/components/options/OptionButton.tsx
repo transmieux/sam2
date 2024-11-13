@@ -55,9 +55,9 @@ export default function OptionButton({
     <div
       onClick={handleClick}
       className={`relative rounded-lg h-full flex items-center justify-center 
-${variant === 'default' ? 'bg-graydark-700' : ''}
+${variant === 'default' ? 'bg-[#f0f0f0]' : ''}
 ${!isDisabled && 'cursor-pointer'}
-${isDisabled ? 'text-gray-300' : ''}
+${isDisabled ? 'text-gray-700' : ''}
 ${isActive && BLUE_PINK_FILL_BR}`}>
       <div className="flex gap-2 items-center py-4 md:py-6">
         {isLoading ? (
@@ -65,10 +65,10 @@ ${isActive && BLUE_PINK_FILL_BR}`}>
         ) : (
           <Icon
             size={isMobile ? 24 : 28}
-            className={`mx-auto ${isDisabled ? 'text-gray-300' : 'text-white'}`}
+            className={`mx-auto ${isDisabled ? 'text-gray-700' : 'text-black'}`}
           />
         )}
-        <div className="text-base font-medium text-white">
+        <div className="text-base font-medium text-black">
           {isLoading && loadingProps?.label != null
             ? loadingProps.label
             : title}
@@ -78,9 +78,9 @@ ${isActive && BLUE_PINK_FILL_BR}`}>
   );
 
   return variant === 'gradient' ? (
-    <GradientBorder rounded={false} className={'rounded-lg md:rounded-full'}>
+    <div className={'rounded-lg md:rounded-full bg-white text-black border border-black'}>
       {ButtonBase}
-    </GradientBorder>
+    </div>
   ) : (
     ButtonBase
   );

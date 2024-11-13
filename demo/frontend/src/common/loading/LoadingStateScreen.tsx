@@ -23,7 +23,7 @@ import {Link} from 'react-router-dom';
 
 const styles = stylex.create({
   container: {
-    backgroundColor: '#000',
+    backgroundColor: '#fcfcfc',
     minHeight: '100%',
   },
   content: {
@@ -37,7 +37,7 @@ const styles = stylex.create({
       '@media screen and (max-width: 768px)': '3rem',
     },
     paddingHorizontal: spacing[8],
-    color: '#fff',
+    color: '#000',
   },
   animationContainer: {
     display: 'flex',
@@ -63,12 +63,12 @@ const styles = stylex.create({
   },
   description: {
     textAlign: 'center',
-    color: '#A7B3BF',
+    color: '#000',
   },
   link: {
     textAlign: 'center',
     textDecorationLine: 'underline',
-    color: '#A7B3BF',
+    color: '#000',
   },
 });
 

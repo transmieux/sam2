@@ -41,7 +41,7 @@ export default function Toolbar() {
 
   const resetEffects = useCallback(() => {
     setEffect('Original', EffectIndex.BACKGROUND, {variant: 0});
-    setEffect('Overlay', EffectIndex.HIGHLIGHT, {variant: 0});
+    setEffect('PixelateMask', EffectIndex.HIGHLIGHT, {variant: 0});
   }, [setEffect]);
 
   const handleStopVideo = useCallback(() => {

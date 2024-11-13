@@ -55,6 +55,10 @@ export type EffectFrameContext = {
   frame: ImageBitmap;
   timeParameter?: number;
   actionPoint: EffectActionPoint | null;
+  startFrame: number | null,
+  endFrame: number | null
+  resolution: number | null
+  margin: number | null
 };
 
 export interface Effect {

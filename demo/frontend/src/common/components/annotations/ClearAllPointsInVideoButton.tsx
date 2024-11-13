@@ -17,6 +17,7 @@ import useRestartSession from '@/common/components/session/useRestartSession';
 import useMessagesSnackbar from '@/common/components/snackbar/useDemoMessagesSnackbar';
 import useVideo from '@/common/components/video/editor/useVideo';
 import {isPlayingAtom, isStreamingAtom, labelTypeAtom} from '@/demo/atoms';
+import useSettingsContext from '@/settings/useSettingsContext';
 import {Reset} from '@carbon/icons-react';
 import stylex from '@stylexjs/stylex';
 import {useAtomValue, useSetAtom} from 'jotai';
@@ -41,6 +42,14 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
   const setLabelType = useSetAtom(labelTypeAtom);
   const {clearMessage} = useMessagesSnackbar();
   const {restartSession} = useRestartSession();
+  const {
+    setMultiRange,
+    setStartFrame,
+    setEndFrame,
+    vidoeDuration,
+    setResolution,
+    setMargin,
+  } = useSettingsContext();
 
   const video = useVideo();
 
@@ -61,6 +70,15 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
       await restartSession();
     }
     video.frame = 0;
+    video?.startFrame(0);
+    video?.endFrame(video.numberOfFrames);
+    video.margin(5);
+    video.resolution(5);
+    setEndFrame(video.numberOfFrames);
+    setStartFrame(0);
+    setMultiRange([0, vidoeDuration]);
+    setResolution(5);
+    setMargin(5);
     setLabelType('positive');
     onRestart();
     clearMessage();
@@ -72,7 +90,7 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
       <Button
         color="ghost"
         onClick={handleRestart}
-        className="!px-4 !rounded-full font-medium text-white hover:bg-black"
+        className="!px-4 !rounded-full font-medium text-black hover:bg-[#f0f0f0]"
         startIcon={isLoading ? <Loading size="sm" /> : <Reset size={20} />}>
         Start over
       </Button>

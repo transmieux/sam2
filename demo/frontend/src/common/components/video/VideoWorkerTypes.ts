@@ -73,6 +73,11 @@ export type EncodeVideoRequest = Request<'encode', unknown>;
 
 export type EnableStatsRequest = Request<'enableStats', unknown>;
 
+export type StartFrame = Request<'startFrame', { frame: number }>
+export type EndFrame = Request<'endFrame', { frame: number }>
+export type Resolution = Request<'resolution', { num: number }>
+export type Margin = Request<'margin', { num: number }>
+
 export type VideoWorkerRequest =
   | SetCanvasRequest
   | SetSourceRequest
@@ -83,7 +88,11 @@ export type VideoWorkerRequest =
   | FilmstripRequest
   | SetEffectRequest
   | EncodeVideoRequest
-  | EnableStatsRequest;
+  | EnableStatsRequest
+  | StartFrame
+  | EndFrame
+  | Resolution
+  | Margin;
 
 export type VideoWorkerRequestMessageEvent = MessageEvent<VideoWorkerRequest>;
 

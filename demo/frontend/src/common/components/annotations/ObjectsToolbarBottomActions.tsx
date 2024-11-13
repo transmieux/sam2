@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import ClearAllPointsInVideoButton from '@/common/components/annotations/ClearAllPointsInVideoButton';
-import CloseSessionButton from '@/common/components/annotations/CloseSessionButton';
+// import CloseSessionButton from '@/common/components/annotations/CloseSessionButton';
 import TrackAndPlayButton from '@/common/components/button/TrackAndPlayButton';
 import ToolbarBottomActionsWrapper from '@/common/components/toolbar/ToolbarBottomActionsWrapper';
 import {
@@ -23,6 +23,7 @@ import {
 } from '@/common/components/toolbar/ToolbarConfig';
 import {streamingStateAtom} from '@/demo/atoms';
 import {useAtomValue} from 'jotai';
+import EffectsToolbarBottomActions from '../effects/EffectsToolbarBottomActions';
 
 type Props = {
   onTabChange: (newIndex: number) => void;
@@ -34,9 +35,9 @@ export default function ObjectsToolbarBottomActions({onTabChange}: Props) {
   const isTrackingEnabled =
     streamingState !== 'none' && streamingState !== 'full';
 
-  function handleSwitchToEffectsTab() {
-    onTabChange(EFFECT_TOOLBAR_INDEX);
-  }
+  // function handleSwitchToEffectsTab() {
+  //   onTabChange(EFFECT_TOOLBAR_INDEX);
+  // }
 
   return (
     <ToolbarBottomActionsWrapper>
@@ -45,7 +46,8 @@ export default function ObjectsToolbarBottomActions({onTabChange}: Props) {
       />
       {isTrackingEnabled && <TrackAndPlayButton />}
       {streamingState === 'full' && (
-        <CloseSessionButton onSessionClose={handleSwitchToEffectsTab} />
+        // <CloseSessionButton onSessionClose={handleSwitchToEffectsTab} />
+        <EffectsToolbarBottomActions onTabChange={onTabChange} />
       )}
     </ToolbarBottomActionsWrapper>
   );
