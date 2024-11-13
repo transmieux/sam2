@@ -154,7 +154,7 @@ export default function ObjectActions({objectId, active}: Props) {
                     variant: resolution,
                   });
                 }}
-                className={`w-[50px] rounded-md text-center`}
+                className={`w-[50px] rounded-md text-center bg-white text-black`}
               />
               <pre> ~ </pre>
               <input
@@ -186,7 +186,7 @@ export default function ObjectActions({objectId, active}: Props) {
                     variant: resolution,
                   });
                 }}
-                className={`w-[50px] rounded-md text-center`}
+                className={`w-[50px] rounded-md text-center bg-white text-black`}
               />
             </div>
           </div>
@@ -208,7 +208,7 @@ export default function ObjectActions({objectId, active}: Props) {
                     variant: parseInt(e.target.value),
                   });
                 }}
-                className={`w-10 rounded-md text-center`}
+                className={`w-10 rounded-md text-center bg-white text-black`}
               />
             </div>
           </div>
@@ -230,7 +230,7 @@ export default function ObjectActions({objectId, active}: Props) {
                     variant: parseInt(e.target.value),
                   });
                 }}
-                className={`w-10 rounded-md text-center`}
+                className={`w-10 rounded-md text-center bg-white text-black`}
               />
             </div>
           </div>

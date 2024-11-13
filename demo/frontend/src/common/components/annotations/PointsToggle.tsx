@@ -22,7 +22,7 @@ export default function PointsToggle() {
   const isPositive = labelType === 'positive';
 
   const buttonStyle = (selected: boolean) =>
-    `btn-md bg-graydark-800 md:px-2 lg:px-4 py-0.5 ${selected ? `border border-white hover:bg-graydark-800` : `border-red-400 hover:bg-graydark-50`}`;
+    `border border-black btn-md bg-graydark-800 md:px-2 lg:px-4 py-0.5 ${selected ? `border border-black bg-graydark-50 hover:bg-graydark-50` : ` border-white hover:bg-graydark-50`}`;
 
   return (
     <div className="flex items-center w-full md:ml-2">

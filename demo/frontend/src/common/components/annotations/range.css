@@ -38,3 +38,14 @@
   background-color: #00418b !important;
   margin: -6px -12px !important;
 }
+
+/* .sam2-range input[type='range']::-webkit-slider-runnable-track {
+  color: #000000;
+  margin-top: -1px;
+  background-color: #00418b;
+}
+
+.sam2-range input[type='range']::-webkit-slider-thumb {
+  background: #000000;
+  box-shadow: -80px 0 0 80px #67AEFF;
+} */

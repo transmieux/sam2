@@ -154,7 +154,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
 
           <div className="mt-3">
             <h6 className="font-semibold">Mosaic Resoluation</h6>
-            <div>
+            <div className='sam2-range'>
               <input
                 type="range"
                 min={5}
@@ -169,7 +169,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   });
                   video?.resolution(parseInt(e.target.value));
                 }}
-                className="range w-full h-1 cursor-pointer"
+                className="range w-full h-3 cursor-pointer"
                 // step={0.5}
                 step={5}
                 aria-orientation="horizontal"
@@ -186,7 +186,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
           {/* Margin Range */}
           <div className="mt-3">
             <h6 className="font-semibold">Mosaic Margin</h6>
-            <div>
+            <div className='sam2-range'>
               <input
                 type="range"
                 min={5}
@@ -200,7 +200,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   });
                   video?.margin(parseInt(e.target.value));
                 }}
-                className="range w-full cursor-pointer h-1"
+                className="range w-full cursor-pointer h-3"
                 // step={0.5}
                 step={5}
               />

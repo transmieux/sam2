@@ -63,12 +63,12 @@ const styles = stylex.create({
   },
   description: {
     textAlign: 'center',
-    color: '#A7B3BF',
+    color: '#000',
   },
   link: {
     textAlign: 'center',
     textDecorationLine: 'underline',
-    color: '#A7B3BF',
+    color: '#000',
   },
 });
 
