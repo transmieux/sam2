@@ -45,7 +45,7 @@ function CustomButton({className, ...props}: ButtonProps) {
     <Button
       size="sm"
       color="ghost"
-      className={`font-medium border-none hover:bg-black  px-2 h-10 ${className}`}
+      className={`font-medium bg-gray-100 hover:bg-gray-300 px-2 h-10 ${className}`}
       {...props}>
       {props.children}
     </Button>
