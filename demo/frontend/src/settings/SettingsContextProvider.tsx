@@ -58,6 +58,8 @@ type ContextProps = {
   setEndFrame: (value: number) => void;
   frameData: any;
   setFrameData: any;
+  vidoeDuration: number;
+  setVidoeDuration: any;
 };
 
 export const SettingsContext = createContext<ContextProps>({
@@ -78,6 +80,8 @@ export const SettingsContext = createContext<ContextProps>({
   setEndFrame: emptyFunction,
   frameData: null,
   setFrameData: emptyFunction,
+  vidoeDuration: 0,
+  setVidoeDuration: emptyFunction,
 });
 
 type Props = PropsWithChildren;
@@ -89,6 +93,7 @@ export default function SettingsContextProvider({children}: Props) {
   const [startFrame, setStartFrame] = useAtom(startFrameStateAtom);
   const [endFrame, setEndFrame] = useAtom(endFrameStateAtom);
   const [frameData, setFrameData] = useState<any>();
+  const [vidoeDuration, setVidoeDuration] = useState<any>();
   const [state, dispatch] = useImmerReducer(
     settingsReducer,
     DEFAULT_SETTINGS,
@@ -135,6 +140,8 @@ export default function SettingsContextProvider({children}: Props) {
       setEndFrame,
       frameData,
       setFrameData,
+      vidoeDuration,
+      setVidoeDuration,
     }),
     [
       state,
@@ -148,6 +155,7 @@ export default function SettingsContextProvider({children}: Props) {
       endFrame,
       multiRange,
       frameData,
+      vidoeDuration,
     ],
   );
 

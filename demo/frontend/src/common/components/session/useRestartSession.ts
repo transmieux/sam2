@@ -34,8 +34,8 @@ export default function useRestartSession() {
   const setActiveTrackletObjectId = useSetAtom(activeTrackletObjectIdAtom);
   const setTracklets = useSetAtom(trackletObjectsAtom);
   const setLabelType = useSetAtom(labelTypeAtom);
-  const {clearMessage} = useMessagesSnackbar();
-  const { setMultiRange, setEndFrame, setStartFrame, multiRange, setResolution, setMargin } = useSettingsContext();
+  const { clearMessage } = useMessagesSnackbar();
+  const { setMultiRange, setEndFrame, setStartFrame, setResolution, setMargin, vidoeDuration } = useSettingsContext();
 
   const {inputVideo} = useInputVideo();
   const video = useVideo();
@@ -61,14 +61,14 @@ export default function useRestartSession() {
     clearMessage();
     setIsLoading(false);
     video?.startFrame(0);
-    video?.endFrame(multiRange[1]);
+    video?.endFrame(video.numberOfFrames);
     video.margin(5);
     video.resolution(5);
     setResolution(5);
     setMargin(5);
-    setEndFrame(multiRange[1]);
+    setEndFrame(video.numberOfFrames);
     setStartFrame(0);
-    setMultiRange([0, 9])
+    setMultiRange([0, vidoeDuration])
   }
 
   return {isLoading, restartSession};

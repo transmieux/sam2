@@ -190,4 +190,4 @@ export const resoultionStateAtom = atom<number>(5);
 export const marginStateAtom = atom<number>(5);
 export const startFrameStateAtom = atom<number>(0);
 export const endFrameStateAtom = atom<number>(100);
-export const multiRangeStateAtom = atom<number[]>([0, 9]);
+export const multiRangeStateAtom = atom<number[]>([0, 10]);

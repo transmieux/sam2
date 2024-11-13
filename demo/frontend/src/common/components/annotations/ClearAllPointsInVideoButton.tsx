@@ -46,7 +46,7 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
     setMultiRange,
     setStartFrame,
     setEndFrame,
-    multiRange,
+    vidoeDuration,
     setResolution,
     setMargin,
   } = useSettingsContext();
@@ -71,12 +71,12 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
     }
     video.frame = 0;
     video?.startFrame(0);
-    video?.endFrame(multiRange[1]);
+    video?.endFrame(video.numberOfFrames);
     video.margin(5);
     video.resolution(5);
-    setEndFrame(multiRange[1]);
+    setEndFrame(video.numberOfFrames);
     setStartFrame(0);
-    setMultiRange([0, 9]);
+    setMultiRange([0, vidoeDuration]);
     setResolution(5);
     setMargin(5);
     setLabelType('positive');

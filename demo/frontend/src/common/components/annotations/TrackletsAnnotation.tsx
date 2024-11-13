@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import TrackletSwimlane from '@/common/components/annotations/TrackletSwimlane';
 import useTracklets from '@/common/components/annotations/useTracklets';
 import useVideo from '@/common/components/video/editor/useVideo';
@@ -61,6 +61,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
     setEndFrame,
     frameData,
     setFrameData,
+    setVidoeDuration,
   } = useSettingsContext();
 
   const duration = frameData?.numFrames / frameData?.fps;
@@ -69,20 +70,20 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
       video.frame = index;
     }
   }
-  // const resolutionNum = [
-  //   {label: 5, value: 0},
-  //   {label: 10, value: 1},
-  //   {label: 15, value: 2},
-  //   {label: 20, value: 3},
-  //   {label: 25, value: 4},
-  //   {label: 30, value: 5},
-  // ];
+  const resolutionNum = [
+    {label: 5, value: 5},
+    {label: 10, value: 10},
+    {label: 15, value: 15},
+    {label: 20, value: 20},
+    {label: 25, value: 25},
+    {label: 30, value: 30},
+  ];
 
-  const resolutionNum = Array.from({length: 51}, (_, i) => {
-    // Start from 5 and add 0.5 for each step
-    const value = (5 + i * 0.5).toFixed(1);
-    return {label: value, value: parseFloat(value)};
-  });
+  // const resolutionNum = Array.from({length: 51}, (_, i) => {
+  //   // Start from 5 and add 0.5 for each step
+  //   const value = (5 + i * 0.5).toFixed(1);
+  //   return {label: value, value: parseFloat(value)};
+  // });
 
   useEffect(() => {
     const getMetaData = async () => {
@@ -104,6 +105,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
 
     getMetaData();
     setMultiRange([0, Math.floor(duration)]);
+    setVidoeDuration(Math.floor(duration));
   }, [inputVideo.url, duration, video]);
 
   return (
@@ -168,7 +170,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   video?.resolution(parseInt(e.target.value));
                 }}
                 className="range w-full h-1 cursor-pointer"
-                step={0.5}
+                // step={0.5}
+                step={5}
                 aria-orientation="horizontal"
                 id="steps-range-slider-usage"
               />
@@ -198,7 +201,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   video?.margin(parseInt(e.target.value));
                 }}
                 className="range w-full cursor-pointer h-1"
-                step={0.5}
+                // step={0.5}
+                step={5}
               />
               <div className="flex w-full justify-between px-2 text-xs">
                 {resolutionNum.map(num => {

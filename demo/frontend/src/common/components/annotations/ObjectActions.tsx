@@ -61,6 +61,7 @@ export default function ObjectActions({objectId, active}: Props) {
     setMargin,
     setMultiRange,
     frameData,
+    vidoeDuration
   } = useSettingsContext();
   const [isRemovingObject, setIsRemovingObject] = useState<boolean>(false);
   const [activeTrackId, setActiveTrackletId] = useAtom(
@@ -98,10 +99,10 @@ export default function ObjectActions({objectId, active}: Props) {
   
   const call = () => {
     const startFrame = Math.round(
-      multiRange[0] * (frameData?.numFrames / Math.floor(multiRange[1])),
+      multiRange[0] * (frameData?.numFrames / vidoeDuration),
     );
     const endFrame = Math.round(
-      multiRange[1] * (frameData?.numFrames / Math.floor(multiRange[1])),
+      multiRange[1] * (frameData?.numFrames / vidoeDuration),
     );
     video?.startFrame(startFrame);
     video?.endFrame(endFrame);
@@ -128,20 +129,21 @@ export default function ObjectActions({objectId, active}: Props) {
                 type="number"
                 min={0}
                 value={multiRange[0]}
+                max={multiRange[1]} 
                 onChange={e => {
                   const val = e.target.value;
                   if (val === '' || parseInt(val) >= multiRange[1]) {
-                    setMultiRange([0, multiRange[1]]);
+                    setMultiRange([0, vidoeDuration]);
                     call();
                   } else {
                     setMultiRange([parseInt(val), multiRange[1]]);
                     const startFrame = Math.round(
                       parseInt(val) *
-                        (frameData?.numFrames / Math.floor(multiRange[1])),
+                        (frameData?.numFrames / vidoeDuration),
                     );
                     const endFrame = Math.round(
                       multiRange[1] *
-                        (frameData?.numFrames / Math.floor(multiRange[1])),
+                        (frameData?.numFrames / vidoeDuration),
                     );
                     video?.startFrame(startFrame);
                     video?.endFrame(endFrame);
@@ -157,35 +159,32 @@ export default function ObjectActions({objectId, active}: Props) {
               <pre> ~ </pre>
               <input
                 type="number"
-                min={0}
-                max={multiRange[1]} //durtion
+                min={multiRange[0]}
                 value={multiRange[1]}
+                max={vidoeDuration} 
                 onChange={e => {
                   const val = e.target.value;
                   if (val === '' || parseInt(val) <= multiRange[0]) {
-                    setMultiRange([multiRange[0], Math.floor(multiRange[1])]);
-                    setEffect('PixelateMask', 1, {
-                      variant: resolution,
-                    });
+                    setMultiRange([multiRange[0], vidoeDuration]);
                     call();
                   } else {
-                    setMultiRange([multiRange[0], parseInt(val)]);
-                    setEffect('PixelateMask', 1, {
-                      variant: resolution,
-                    });
                     const startFrame = Math.round(
                       multiRange[0] *
-                        (frameData?.numFrames / Math.floor(multiRange[1])),
+                        (frameData?.numFrames / vidoeDuration),
                     );
                     const endFrame = Math.round(
                       parseInt(val) *
-                        (frameData?.numFrames / Math.floor(multiRange[1])),
+                        (frameData?.numFrames / vidoeDuration),
                     );
                     video?.startFrame(startFrame);
                     video?.endFrame(endFrame);
                     video?.resolution(resolution);
                     video?.margin(margin);
+                    setMultiRange([multiRange[0], parseInt(val)]);
                   }
+                  setEffect('PixelateMask', 1, {
+                    variant: resolution,
+                  });
                 }}
                 className={`w-[50px] rounded-md text-center`}
               />
@@ -199,7 +198,8 @@ export default function ObjectActions({objectId, active}: Props) {
                 value={resolution}
                 min={5}
                 max={30}
-                step={1}
+                // step={1}
+                step={5}
                 onChange={e => {
                   setResolution(parseInt(e.target.value));
                   video?.resolution(parseInt(e.target.value));
@@ -220,7 +220,8 @@ export default function ObjectActions({objectId, active}: Props) {
                 value={margin}
                 min={5}
                 max={30}
-                step={1}
+                // step={1}
+                step={5}
                 onChange={e => {
                   setMargin(parseInt(e.target.value));
                   video?.margin(parseInt(e.target.value));

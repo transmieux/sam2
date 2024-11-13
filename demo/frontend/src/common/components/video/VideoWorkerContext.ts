@@ -105,7 +105,7 @@ export default class VideoWorkerContext {
   private _allowAnimation: boolean = false;
   private _currentSegmetationPoint: EffectActionPoint | null = null;
   private startFrame: number | null = 0;
-  private endFrame: number | null = null;
+  private endFrame: number | null = 100;
   private resolution: number | null = 1;
   private margin: number | null = 1;
 
