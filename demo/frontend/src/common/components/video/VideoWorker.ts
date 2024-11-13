@@ -118,7 +118,6 @@ self.addEventListener(
         }
 
         case 'margin': {
-          console.log("event.data", event.data);
           const {num} = event.data;
           context.setMargin(num || 1)
           break;

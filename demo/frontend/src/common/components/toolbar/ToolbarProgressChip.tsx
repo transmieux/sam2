@@ -20,7 +20,7 @@ import {useAtomValue} from 'jotai';
 import {useMemo} from 'react';
 import {Loading} from 'react-daisyui';
 
-const TOTAL_DEMO_STEPS = 3;
+const TOTAL_DEMO_STEPS = 2;
 
 export default function ToolbarProgressChip() {
   const [toolbarIndex] = useToolbarTabs();

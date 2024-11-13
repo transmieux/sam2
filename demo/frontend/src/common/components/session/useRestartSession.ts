@@ -23,6 +23,7 @@ import {
   labelTypeAtom,
   trackletObjectsAtom,
 } from '@/demo/atoms';
+import useSettingsContext from '@/settings/useSettingsContext';
 import {useAtomValue, useSetAtom} from 'jotai';
 import {useState} from 'react';
 
@@ -34,6 +35,7 @@ export default function useRestartSession() {
   const setTracklets = useSetAtom(trackletObjectsAtom);
   const setLabelType = useSetAtom(labelTypeAtom);
   const {clearMessage} = useMessagesSnackbar();
+  const { setMultiRange, setEndFrame, setStartFrame, multiRange, setResolution, setMargin } = useSettingsContext();
 
   const {inputVideo} = useInputVideo();
   const video = useVideo();
@@ -58,6 +60,15 @@ export default function useRestartSession() {
     onRestart?.();
     clearMessage();
     setIsLoading(false);
+    video?.startFrame(0);
+    video?.endFrame(multiRange[1]);
+    video.margin(5);
+    video.resolution(5);
+    setResolution(5);
+    setMargin(5);
+    setEndFrame(multiRange[1]);
+    setStartFrame(0);
+    setMultiRange([0, 9])
   }
 
   return {isLoading, restartSession};

@@ -36,6 +36,7 @@ import {
   useCallback,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import {useImmerReducer} from 'use-immer';
 
@@ -55,6 +56,8 @@ type ContextProps = {
   endFrame: number;
   setStartFrame: (value: number) => void;
   setEndFrame: (value: number) => void;
+  frameData: any;
+  setFrameData: any;
 };
 
 export const SettingsContext = createContext<ContextProps>({
@@ -63,8 +66,8 @@ export const SettingsContext = createContext<ContextProps>({
   openModal: emptyFunction,
   closeModal: emptyFunction,
   hasChanged: false,
-  resolution: 1,
-  margin: 1,
+  resolution: 5,
+  margin: 5,
   setResolution: emptyFunction,
   setMargin: emptyFunction,
   multiRange: [0, 10],
@@ -73,6 +76,8 @@ export const SettingsContext = createContext<ContextProps>({
   endFrame: 1,
   setStartFrame: emptyFunction,
   setEndFrame: emptyFunction,
+  frameData: null,
+  setFrameData: emptyFunction,
 });
 
 type Props = PropsWithChildren;
@@ -83,6 +88,7 @@ export default function SettingsContextProvider({children}: Props) {
   const [multiRange, setMultiRange] = useAtom(multiRangeStateAtom);
   const [startFrame, setStartFrame] = useAtom(startFrameStateAtom);
   const [endFrame, setEndFrame] = useAtom(endFrameStateAtom);
+  const [frameData, setFrameData] = useState<any>();
   const [state, dispatch] = useImmerReducer(
     settingsReducer,
     DEFAULT_SETTINGS,
@@ -127,6 +133,8 @@ export default function SettingsContextProvider({children}: Props) {
       setStartFrame,
       endFrame,
       setEndFrame,
+      frameData,
+      setFrameData,
     }),
     [
       state,
@@ -139,6 +147,7 @@ export default function SettingsContextProvider({children}: Props) {
       startFrame,
       endFrame,
       multiRange,
+      frameData,
     ],
   );
 

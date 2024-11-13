@@ -17,6 +17,7 @@ import useRestartSession from '@/common/components/session/useRestartSession';
 import useMessagesSnackbar from '@/common/components/snackbar/useDemoMessagesSnackbar';
 import useVideo from '@/common/components/video/editor/useVideo';
 import {isPlayingAtom, isStreamingAtom, labelTypeAtom} from '@/demo/atoms';
+import useSettingsContext from '@/settings/useSettingsContext';
 import {Reset} from '@carbon/icons-react';
 import stylex from '@stylexjs/stylex';
 import {useAtomValue, useSetAtom} from 'jotai';
@@ -41,6 +42,14 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
   const setLabelType = useSetAtom(labelTypeAtom);
   const {clearMessage} = useMessagesSnackbar();
   const {restartSession} = useRestartSession();
+  const {
+    setMultiRange,
+    setStartFrame,
+    setEndFrame,
+    multiRange,
+    setResolution,
+    setMargin,
+  } = useSettingsContext();
 
   const video = useVideo();
 
@@ -61,6 +70,15 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
       await restartSession();
     }
     video.frame = 0;
+    video?.startFrame(0);
+    video?.endFrame(multiRange[1]);
+    video.margin(5);
+    video.resolution(5);
+    setEndFrame(multiRange[1]);
+    setStartFrame(0);
+    setMultiRange([0, 9]);
+    setResolution(5);
+    setMargin(5);
     setLabelType('positive');
     onRestart();
     clearMessage();

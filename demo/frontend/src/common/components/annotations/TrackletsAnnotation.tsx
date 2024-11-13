@@ -30,14 +30,14 @@ import MultiRangeSlider from 'multi-range-slider-react';
 import './range.css';
 
 const styles = stylex.create({
-  container: {
+  container: streamingState => ({
     marginTop: m[3],
-    height: 250,
+    height: streamingState === 'full' ? 250 : 20,
     paddingHorizontal: spacing[4],
     '@media screen and (max-width: 768px)': {
-      height: 25,
+      height: streamingState === 'full' ? 25 : 20,
     },
-  },
+  }),
 });
 
 type Props = {
@@ -49,7 +49,6 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
   const tracklets = useTracklets();
   const streamingState = useAtomValue(streamingStateAtom);
   const setEffect = useVideoEffect();
-  const [frameData, setFrameData] = useState<any>();
 
   const {
     resolution,
@@ -60,6 +59,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
     setMultiRange,
     setStartFrame,
     setEndFrame,
+    frameData,
+    setFrameData,
   } = useSettingsContext();
 
   const duration = frameData?.numFrames / frameData?.fps;
@@ -68,14 +69,20 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
       video.frame = index;
     }
   }
-  const resolutionNum = [
-    {label: 5, value: 0},
-    {label: 10, value: 1},
-    {label: 15, value: 2},
-    {label: 20, value: 3},
-    {label: 25, value: 4},
-    {label: 30, value: 5},
-  ];
+  // const resolutionNum = [
+  //   {label: 5, value: 0},
+  //   {label: 10, value: 1},
+  //   {label: 15, value: 2},
+  //   {label: 20, value: 3},
+  //   {label: 25, value: 4},
+  //   {label: 30, value: 5},
+  // ];
+
+  const resolutionNum = Array.from({length: 51}, (_, i) => {
+    // Start from 5 and add 0.5 for each step
+    const value = (5 + i * 0.5).toFixed(1);
+    return {label: value, value: parseFloat(value)};
+  });
 
   useEffect(() => {
     const getMetaData = async () => {
@@ -100,7 +107,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
   }, [inputVideo.url, duration, video]);
 
   return (
-    <div {...stylex.props(styles.container)}>
+    <div {...stylex.props(styles.container(streamingState))}>
       {tracklets.map(tracklet => (
         <TrackletSwimlane
           key={tracklet.id}
@@ -116,7 +123,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
             <MultiRangeSlider
               min={0}
               max={Math.floor(duration)} // video duration
-              step={1}
+              step={0.1}
               minValue={multiRange[0]}
               maxValue={multiRange[1]}
               preventWheel={true}
@@ -148,8 +155,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
             <div>
               <input
                 type="range"
-                min={0}
-                max={5}
+                min={5}
+                max={30}
                 name="resolution"
                 value={resolution}
                 onChange={e => {
@@ -161,14 +168,14 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   video?.resolution(parseInt(e.target.value));
                 }}
                 className="range w-full h-1 cursor-pointer"
-                step="1"
+                step={0.5}
                 aria-orientation="horizontal"
                 id="steps-range-slider-usage"
               />
               <div className="flex w-full justify-between px-2 text-xs">
-                {resolutionNum.map(num => {
-                  return <span>{num.label}</span>;
-                })}
+                {resolutionNum.map(num => (
+                  <span key={num.value}>{num.label}</span>
+                ))}
               </div>
             </div>
           </div>
@@ -179,8 +186,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
             <div>
               <input
                 type="range"
-                min={0}
-                max={5}
+                min={5}
+                max={30}
                 name="margin"
                 value={margin}
                 onChange={e => {
@@ -191,7 +198,7 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                   video?.margin(parseInt(e.target.value));
                 }}
                 className="range w-full cursor-pointer h-1"
-                step="1"
+                step={0.5}
               />
               <div className="flex w-full justify-between px-2 text-xs">
                 {resolutionNum.map(num => {

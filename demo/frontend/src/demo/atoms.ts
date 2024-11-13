@@ -186,8 +186,8 @@ export const uploadingStateAtom = atom<'default' | 'uploading' | 'error'>(
 // range [ resolution, margin ]
 // #####################
 
-export const resoultionStateAtom = atom<number>(1);
-export const marginStateAtom = atom<number>(1);
+export const resoultionStateAtom = atom<number>(5);
+export const marginStateAtom = atom<number>(5);
 export const startFrameStateAtom = atom<number>(0);
 export const endFrameStateAtom = atom<number>(100);
-export const multiRangeStateAtom = atom<number[]>([0, 10]);
+export const multiRangeStateAtom = atom<number[]>([0, 9]);

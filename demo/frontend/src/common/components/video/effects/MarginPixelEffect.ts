@@ -37,7 +37,7 @@ export default class MarginPixelEffect extends BaseGLEffect {
   private _maskTextures: WebGLTexture[] = [];
 
   constructor() {
-    super(6);
+    super(30);
     this.vertexShaderSource = vertexShaderSource;
     this.fragmentShaderSource = fragmentShaderSource;
   }
@@ -74,8 +74,12 @@ export default class MarginPixelEffect extends BaseGLEffect {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const blockSize = [5, 10, 15, 20, 25, 30][frameContext.resolution];
-    const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
+    // const blockSize = [5, 10, 15, 20, 25, 30][frameContext.resolution];
+    // const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
+   
+    const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][frameContext.resolution];
+    
+    const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][this.variant];
 
     // dynamic uniforms per frame
     gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
