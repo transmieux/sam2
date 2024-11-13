@@ -32,7 +32,7 @@ export default function RestartSessionButton({onRestartSession}: Props) {
     <Button
       color="ghost"
       onClick={handleRestartSession}
-      className="!px-4 !rounded-full font-medium text-white hover:bg-black"
+      className="!px-4 !rounded-full font-medium text-black hover:bg-white"
       startIcon={isLoading ? <Loading size="sm" /> : <Reset size={20} />}>
       Start over
     </Button>

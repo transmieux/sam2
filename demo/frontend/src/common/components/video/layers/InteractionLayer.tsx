@@ -28,6 +28,7 @@ const styles = stylex.create({
     top: 0,
     right: 0,
     bottom: 0,
+    // backgroundColor: '#ff0000',
   },
 });
 

@@ -61,8 +61,8 @@ const styles = stylex.create({
     flexDirection: 'column',
     overflow: 'auto',
     width: '100%',
-    borderColor: color['gray-800'],
-    backgroundColor: color['gray-800'],
+    borderColor: color['white-100'],
+    backgroundColor: color['white-100'],
     borderWidth: 8,
     borderRadius: 12,
     '@media screen and (max-width: 768px)': {
@@ -304,7 +304,7 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
           video={inputVideo}
           layers={layers}
           loading={session == null}>
-          <div className="bg-graydark-800 w-full">
+          <div className="bg-[#fcfcfc] w-full">
             <VideoFilmstripWithPlayback />
             <TrackletsAnnotation inputVideo={inputVideo} />
           </div>
