@@ -32,13 +32,13 @@ export default function DesktopToolbar({tabIndex, onTabChange}: Props) {
   const tabs = [
     <ObjectsToolbar key="objects" onTabChange={onTabChange} />,
     <EffectsToolbar key="effects" onTabChange={onTabChange} />,
-    <MoreOptionsToolbar key="options" onTabChange={onTabChange} />,
+    <MoreOptionsToolbar key="options" onTabChange={onTabChange} />, 
   ];
 
   return (
     <div
       style={toolbarShadow}
-      className="bg-graydark-800 text-white md:basis-[350px] lg:basis-[435px] shrink-0 rounded-xl">
+      className="bg-[#fcfcfc] text-black md:basis-[350px] lg:basis-[435px] shrink-0 rounded-xl">
       {tabs[tabIndex]}
     </div>
   );

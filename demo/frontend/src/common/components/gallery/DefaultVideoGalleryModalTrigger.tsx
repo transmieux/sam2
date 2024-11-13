@@ -23,7 +23,7 @@ export default function DefaultVideoGalleryModalTrigger({
   return (
     <ResponsiveButton
       color="ghost"
-      className="hover:!bg-black"
+      className="hover:bg-gray-200"
       startIcon={<ImageCopy size={20} />}
       onClick={onClick}>
       Change video

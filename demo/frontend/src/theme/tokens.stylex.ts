@@ -74,7 +74,8 @@ export const color = stylex.defineVars({
   'gray-900': 'rgb(17 24 39)',
   'gray-800': 'rgb(26 28 31)',
   'gray-700': 'rgb(55 62 65)',
-  'blue-600': 'rgb(37 99 235)',
+  'blue-600': 'rgb(37 99 235)',  
+  'white-100': '#fcfcfc'
 });
 
 export const screenSizes = {
@@ -109,8 +110,9 @@ export const gradients = stylex.defineVars({
     'linear-gradient(#000, #000) padding-box, linear-gradient(to right bottom, #FB73A5,#595FEF,#94EAE2,#FCCB6B) border-box',
 
   rainbowReverse:
-    'linear-gradient(#000, #000) padding-box, linear-gradient(to left top, #FB73A5,#595FEF,#94EAE2,#FCCB6B) border-box',
+    'linear-gradient(#000, #000) padding-box, linear-gradient(to left top, #FB73A5,#595FEF,#94EAE2,#FCCB6B) border-box',  
 
   yellowTeal:
     'linear-gradient(#000, #000) padding-box, linear-gradient(to right bottom, #94EAE2,#FCCB6B) border-box',
 });
+   

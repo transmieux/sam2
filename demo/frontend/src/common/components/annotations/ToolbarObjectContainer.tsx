@@ -38,7 +38,7 @@ const sharedStyles = stylex.create({
     },
   },
   activeContainer: {
-    background: '#000',
+    background: '#f0f0f0',
     borderRadius: 16,
     marginHorizontal: 16,
     padding: {

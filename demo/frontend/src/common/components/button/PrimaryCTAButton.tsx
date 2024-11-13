@@ -28,13 +28,13 @@ export default function PrimaryCTAButton({
   ...props
 }: Props) {
   return (
-    <GradientBorder disabled={disabled}>
+    // <GradientBorder disabled={disabled}>
       <button
-        className={`btn ${disabled && 'btn-disabled'} !rounded-full !bg-black !text-white !border-none`}
+        className={`btn ${disabled && 'btn-disabled'} !rounded-full !text-black border-1 border-black hover:bg-[#f0f0f0] bg-white`}
         {...props}>
         {children}
-        {endIcon != null && endIcon}
+        {endIcon != null && endIcon}  
       </button>
-    </GradientBorder>
+    // </GradientBorder>
   );
 }

@@ -19,6 +19,7 @@ import * as daisyColorThemes from 'daisyui/src/theming/themes';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
@@ -97,8 +98,8 @@ export default {
           500: '#667788',
           600: '#465A69',
           700: '#343845',
-          800: '#1A1C1F',
-          900: '#0F191E',
+          800: '#FFFFF7',
+          900: '#0F191E',  
         },
       },
       lineHeight: {

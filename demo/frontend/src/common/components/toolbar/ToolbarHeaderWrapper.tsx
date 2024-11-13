@@ -33,10 +33,10 @@ export default function ToolbarHeaderWrapper({
 }: Props) {
   return (
     <div
-      className={`flex flex-col gap-2 p-8 border-b border-b-black ${className}`}>
+      className={`flex flex-col gap-2 p-8 border-b border-b-[#cccccc] ${className}`}>
       <div className="flex items-center">
         {showProgressChip && <ToolbarProgressChip />}
-        <h2 className="text-xl">{title}</h2>
+        <h2 className="text-xl text-gray-700">{title}</h2>
       </div>
 
       {description != null && (
