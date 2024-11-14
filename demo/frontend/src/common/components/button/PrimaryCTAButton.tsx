@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import GradientBorder from '@/common/components/button/GradientBorder';
+// import GradientBorder from '@/common/components/button/GradientBorder';
 import type {ReactNode} from 'react';
 
 type Props = {
