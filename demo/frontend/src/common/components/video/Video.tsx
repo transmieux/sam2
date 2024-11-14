@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {BaseTracklet, SegmentationPoint} from '@/common/tracker/Tracker';
+import {
+  BaseTracklet,
+  SegmentationPoint,
+  TypeOfValue,
+} from '@/common/tracker/Tracker';
 import {TrackerOptions, Trackers} from '@/common/tracker/Trackers';
 import {PauseFilled, PlayFilledAlt} from '@carbon/icons-react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
@@ -116,15 +120,19 @@ export type VideoRef = {
   // Tracker
   initializeTracker(name: keyof Trackers, options?: TrackerOptions): void;
   startSession(videoUrl: string): Promise<string | null>;
-  startFrame(frame:number): void;
-  endFrame(frame:number): void;
-  resolution(num:number): void;
-  margin(num:number): void;
+  startFrame(objectId: number, frame: number): void;
+  endFrame(objectId: number, frame: number): void;
+  resolution(objectId: number, num: number): void;
+  margin(objectId: number, num: number): void;
+  startVideoTime(objectId: number, time: number): void;
+  endVideoTime(objectId: number, time: number): void;
+  objectId(id: number): void;
   closeSession(): void;
   logAnnotations(): void;
   createTracklet(): Promise<BaseTracklet>;
   deleteTracklet(trackletId: number): Promise<void>;
   updatePoints(trackletId: number, points: SegmentationPoint[]): void;
+  updateObject(objectId: number, type: TypeOfValue, value: number): void;
   clearPointsInVideo(): Promise<boolean>;
   getWorker_ONLY_USE_WITH_CAUTION(): Worker;
 };
@@ -233,17 +241,26 @@ export default forwardRef<VideoRef, Props>(function Video(
       initializeTracker(name: keyof Trackers, options: TrackerOptions): void {
         bridge.initializeTracker(name, options);
       },
-      startFrame(frame:number):void{
-        bridge.startFrame(frame);
+      startFrame(objectId: number, frame: number): void {
+        return bridge.startFrame(objectId, frame);
       },
-      endFrame(frame:number):void{
-        bridge.endFrame(frame);
+      endFrame(objectId: number, frame: number): void {
+        return bridge.endFrame(objectId, frame);
       },
-      resolution(num:number):void{
-        bridge.resolution(num);
+      resolution(objectId: number, num: number): void {
+        return bridge.resolution(objectId, num);
       },
-      margin(num:number):void{
-        bridge.margin(num);
+      margin(objectId: number, num: number): void {
+        return bridge.margin(objectId, num);
+      },
+      startVideoTime(objectId: number, time: number): void {
+        return bridge.startVideoTime(objectId, time);
+      },
+      endVideoTime(objectId: number, time: number): void {
+        return bridge.endVideoTime(objectId, time);
+      },
+      objectId(id: number): void {
+        return bridge.objectId(id);
       },
       startSession(videoUrl: string): Promise<string | null> {
         return bridge.startSession(videoUrl);
@@ -262,6 +279,9 @@ export default forwardRef<VideoRef, Props>(function Video(
       },
       updatePoints(trackletId: number, points: SegmentationPoint[]): void {
         bridge.updatePoints(trackletId, points);
+      },
+      updateObject(objectId: number, type: TypeOfValue, value: number): void {
+        return bridge.updateObject(objectId, type, value);
       },
       clearPointsInVideo(): Promise<boolean> {
         return bridge.clearPointsInVideo();

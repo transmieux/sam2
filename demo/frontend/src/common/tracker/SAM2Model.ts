@@ -33,6 +33,7 @@ import {
   StreamingState,
   Tracker,
   Tracklet,
+  TypeOfValue,
 } from '@/common/tracker/Tracker';
 import {TrackerOptions} from '@/common/tracker/Trackers';
 import {
@@ -225,6 +226,12 @@ export class SAM2Model extends Tracker {
       points: [],
       masks: [],
       isInitialized: false,
+      resolution: 5,
+      margin: 5,
+      startFrame: 0,
+      endFrame: 100,
+      startVideoTime: 0,
+      endVideoTime: 10
     };
 
     this._session.tracklets[nextId] = newTracklet;
@@ -464,11 +471,11 @@ export class SAM2Model extends Tracker {
           },
         },
         onCompleted: response => {
-          const {success} = response.clearPointsInVideo;
+          const { success } = response.clearPointsInVideo;
           if (!success) {
             this._sendResponse<ClearPointsInVideoResponse>(
               'clearPointsInVideo',
-              {isSuccessful: false},
+              { isSuccessful: false },
             );
             return;
           }
@@ -587,6 +594,20 @@ export class SAM2Model extends Tracker {
     this._updateTracklets();
   }
 
+  public updateObject(objectId: number, type: TypeOfValue, value: number): void {
+    const tracklet = this._session.tracklets[objectId];
+
+    tracklet[type] = value;
+    invariant(
+      tracklet != null,
+      'tracklet for object id %s not initialized',
+      objectId,
+    );
+    this._updateTracklets();
+    // Mark session needing propagation when point is set
+    // this._updateStreamingState('required');
+  }
+
   private async _updateTrackletMasks(
     data: SAM2ModelAddNewPointsMutation$data['addPoints'],
     updateThumbnails: boolean,
@@ -649,6 +670,7 @@ export class SAM2Model extends Tracker {
         points: trackletPoints,
         thumbnail,
         masks,
+        resolution, margin, startFrame, endFrame, startVideoTime, endVideoTime
       } = tracklet;
       return {
         id,
@@ -661,6 +683,7 @@ export class SAM2Model extends Tracker {
           bounds: mask.bounds,
           isEmpty: mask.isEmpty,
         })),
+        resolution, margin, startFrame, endFrame, startVideoTime, endVideoTime
       };
     });
 

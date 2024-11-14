@@ -36,6 +36,7 @@ import UploadLoadingScreen from '@/common/loading/UploadLoadingScreen';
 import useScreenSize from '@/common/screen/useScreenSize';
 import {SegmentationPoint} from '@/common/tracker/Tracker';
 import {
+  activeTrackletObjectAtom,
   activeTrackletObjectIdAtom,
   frameIndexAtom,
   isAddObjectEnabledAtom,
@@ -93,9 +94,8 @@ type Props = {
 };
 
 export default function DemoVideoEditor({video: inputVideo}: Props) {
-  const {settings, startFrame, endFrame, resolution, margin} = useSettingsContext();
+  const {settings, vidoeDuration, frameData} = useSettingsContext();
   const video = useVideo();
-
   const [isSessionStartFailed, setIsSessionStartFailed] =
     useState<boolean>(false);
 
@@ -112,6 +112,7 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
   const isPlaying = useAtomValue(isPlayingAtom);
   const isVideoLoading = useAtomValue(isVideoLoadingAtom);
   const uploadingState = useAtomValue(uploadingStateAtom);
+  const activeTracklet = useAtomValue(activeTrackletObjectAtom);
 
   const [renderingError, setRenderingError] = useState<ErrorObject | null>(
     null,
@@ -170,10 +171,12 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
       inferenceEndpoint: settings.inferenceAPIEndpoint,
     });
 
-    video?.startFrame(startFrame);
-    video?.endFrame(endFrame);
-    video?.resolution(resolution);
-    video?.margin(margin);
+    if (activeTrackletId !== null && activeTracklet !== null) {
+      video?.startFrame(activeTrackletId, activeTracklet?.startFrame);
+      video?.endFrame(activeTrackletId, activeTracklet?.endFrame);
+      video?.resolution(activeTrackletId, activeTracklet?.resolution);
+      video?.margin(activeTrackletId, activeTracklet?.margin);
+    }
 
     video?.startSession(inputVideo.path);
 
@@ -209,6 +212,8 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
       if (tracklet != null && newPoints.length > 0) {
         setActiveTrackletObjectId(tracklet.id);
         video?.updatePoints(tracklet.id, [newPoints[newPoints.length - 1]]);
+        video?.updateObject(tracklet?.id, 'endFrame', frameData?.numFrames);
+        video?.updateObject(tracklet?.id, 'endVideoTime', vidoeDuration);
       }
     }
 
@@ -306,7 +311,10 @@ export default function DemoVideoEditor({video: inputVideo}: Props) {
           loading={session == null}>
           <div className="bg-[#fcfcfc] w-full">
             <VideoFilmstripWithPlayback />
-            <TrackletsAnnotation inputVideo={inputVideo} />
+            <TrackletsAnnotation
+              inputVideo={inputVideo}
+              objectId={activeTrackletId!}
+            />
           </div>
         </VideoEditor>
       </div>

@@ -34,10 +34,12 @@ import {useState} from 'react';
 import type {ButtonProps} from 'react-daisyui';
 import {Button} from 'react-daisyui';
 import useVideoEffect from '../video/editor/useVideoEffect';
+import {BaseTracklet} from '@/common/tracker/Tracker';
 
 type Props = {
   objectId: number;
   active: boolean;
+  tracklet: BaseTracklet;
 };
 
 function CustomButton({className, ...props}: ButtonProps) {
@@ -52,17 +54,9 @@ function CustomButton({className, ...props}: ButtonProps) {
   );
 }
 
-export default function ObjectActions({objectId, active}: Props) {
-  const {
-    resolution,
-    margin,
-    multiRange,
-    setResolution,
-    setMargin,
-    setMultiRange,
-    frameData,
-    vidoeDuration
-  } = useSettingsContext();
+export default function ObjectActions({objectId, active, tracklet}: Props) {
+  const {setResolution, setMargin, setMultiRange, frameData, vidoeDuration} =
+    useSettingsContext();
   const [isRemovingObject, setIsRemovingObject] = useState<boolean>(false);
   const [activeTrackId, setActiveTrackletId] = useAtom(
     activeTrackletObjectIdAtom,
@@ -96,18 +90,24 @@ export default function ObjectActions({objectId, active}: Props) {
       }
     }
   }
-  
+
   const call = () => {
     const startFrame = Math.round(
-      multiRange[0] * (frameData?.numFrames / vidoeDuration),
+      tracklet?.startVideoTime * (frameData?.numFrames / vidoeDuration),
     );
     const endFrame = Math.round(
-      multiRange[1] * (frameData?.numFrames / vidoeDuration),
+      tracklet?.endVideoTime * (frameData?.numFrames / vidoeDuration),
     );
-    video?.startFrame(startFrame);
-    video?.endFrame(endFrame);
-    video?.resolution(resolution);
-    video?.margin(margin);
+
+    video?.updateObject(objectId, 'startFrame', startFrame);
+    video?.updateObject(objectId, 'endFrame', endFrame);
+    video?.updateObject(objectId, 'resolution', tracklet?.resolution);
+    video?.updateObject(objectId, 'margin', tracklet?.margin);
+
+    video?.startFrame(objectId, startFrame);
+    video?.endFrame(objectId, endFrame);
+    video?.resolution(objectId, tracklet?.resolution);
+    video?.margin(objectId, tracklet?.margin);
   };
 
   return (
@@ -121,37 +121,42 @@ export default function ObjectActions({objectId, active}: Props) {
         </div>
       )}
       {streamingState === 'full' ? (
-        <div className='mb-4 ml-2'>
+        <div className="mb-4 ml-2">
           <div className="flex justify-start my-2  text-center">
             <span className="w-[100px] text-left">Section :</span>
             <div className="flex justify-around">
               <input
                 type="number"
                 min={0}
-                value={multiRange[0]}
-                max={multiRange[1]} 
+                value={tracklet?.startVideoTime}
+                max={tracklet?.endVideoTime}
                 onChange={e => {
                   const val = e.target.value;
-                  if (val === '' || parseInt(val) >= multiRange[1]) {
+                  if (val === '' || parseInt(val) >= tracklet?.endVideoTime) {
                     setMultiRange([0, vidoeDuration]);
+                    video?.updateObject(objectId, 'startVideoTime', 0);
+                    video?.updateObject(
+                      objectId,
+                      'endVideoTime',
+                      vidoeDuration,
+                    );
                     call();
                   } else {
-                    setMultiRange([parseInt(val), multiRange[1]]);
-                    const startFrame = Math.round(
-                      parseInt(val) *
-                        (frameData?.numFrames / vidoeDuration),
+                    setMultiRange([parseInt(val), tracklet?.endVideoTime]);
+                    video?.updateObject(
+                      objectId,
+                      'startVideoTime',
+                      parseInt(val),
                     );
-                    const endFrame = Math.round(
-                      multiRange[1] *
-                        (frameData?.numFrames / vidoeDuration),
+                    video?.updateObject(
+                      objectId,
+                      'endVideoTime',
+                      tracklet?.endVideoTime,
                     );
-                    video?.startFrame(startFrame);
-                    video?.endFrame(endFrame);
-                    video?.resolution(resolution);
-                    video?.margin(margin);
+                    call();
                   }
                   setEffect('PixelateMask', 1, {
-                    variant: resolution,
+                    variant: tracklet?.resolution,
                   });
                 }}
                 className={`w-[50px] rounded-md text-center bg-white text-black`}
@@ -159,31 +164,41 @@ export default function ObjectActions({objectId, active}: Props) {
               <pre> ~ </pre>
               <input
                 type="number"
-                min={multiRange[0]}
-                value={multiRange[1]}
-                max={vidoeDuration} 
+                min={tracklet?.startVideoTime}
+                value={tracklet?.endVideoTime}
+                max={vidoeDuration}
                 onChange={e => {
                   const val = e.target.value;
-                  if (val === '' || parseInt(val) <= multiRange[0]) {
-                    setMultiRange([multiRange[0], vidoeDuration]);
+                  if (val === '' || parseInt(val) <= tracklet?.startVideoTime) {
+                    setMultiRange([tracklet.startVideoTime, vidoeDuration]);
+                    video?.updateObject(
+                      objectId,
+                      'startVideoTime',
+                      tracklet?.startVideoTime,
+                    );
+                    video?.updateObject(
+                      objectId,
+                      'endVideoTime',
+                      vidoeDuration,
+                    );
                     call();
                   } else {
-                    const startFrame = Math.round(
-                      multiRange[0] *
-                        (frameData?.numFrames / vidoeDuration),
+                    call();
+                    setMultiRange([tracklet?.startVideoTime, parseInt(val)]);
+
+                    video?.updateObject(
+                      objectId,
+                      'startVideoTime',
+                      tracklet?.startVideoTime,
                     );
-                    const endFrame = Math.round(
-                      parseInt(val) *
-                        (frameData?.numFrames / vidoeDuration),
+                    video?.updateObject(
+                      objectId,
+                      'endVideoTime',
+                      parseInt(val),
                     );
-                    video?.startFrame(startFrame);
-                    video?.endFrame(endFrame);
-                    video?.resolution(resolution);
-                    video?.margin(margin);
-                    setMultiRange([multiRange[0], parseInt(val)]);
                   }
                   setEffect('PixelateMask', 1, {
-                    variant: resolution,
+                    variant: tracklet?.resolution,
                   });
                 }}
                 className={`w-[50px] rounded-md text-center bg-white text-black`}
@@ -195,15 +210,23 @@ export default function ObjectActions({objectId, active}: Props) {
             <div className="flex justify-between">
               <input
                 type="number"
-                value={resolution}
+                value={tracklet?.resolution}
                 min={5}
                 max={30}
                 // step={1}
                 step={5}
                 onChange={e => {
                   setResolution(parseInt(e.target.value));
-                  video?.resolution(parseInt(e.target.value));
-                  video?.margin(margin);
+
+                  video?.resolution(objectId, parseInt(e.target.value));
+                  video?.margin(objectId, tracklet?.margin);
+                  video?.updateObject(
+                    objectId,
+                    'resolution',
+                    parseInt(e.target.value),
+                  );
+                  video?.updateObject(objectId, 'margin', tracklet?.margin);
+
                   setEffect('PixelateMask', 1, {
                     variant: parseInt(e.target.value),
                   });
@@ -217,15 +240,27 @@ export default function ObjectActions({objectId, active}: Props) {
             <div className="flex justify-between ">
               <input
                 type="number"
-                value={margin}
+                value={tracklet?.margin}
                 min={5}
                 max={30}
                 // step={1}
                 step={5}
                 onChange={e => {
                   setMargin(parseInt(e.target.value));
-                  video?.margin(parseInt(e.target.value));
-                  video?.resolution(resolution);
+
+                  video?.margin(objectId, parseInt(e.target.value));
+                  video?.resolution(objectId, tracklet?.resolution);
+                  video?.updateObject(
+                    objectId,
+                    'margin',
+                    parseInt(e.target.value),
+                  );
+                  video?.updateObject(
+                    objectId,
+                    'resolution',
+                    tracklet?.resolution,
+                  );
+
                   setEffect('MarginPixel', 1, {
                     variant: parseInt(e.target.value),
                   });

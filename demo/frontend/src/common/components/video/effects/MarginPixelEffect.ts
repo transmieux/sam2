@@ -57,6 +57,100 @@ export default class MarginPixelEffect extends BaseGLEffect {
     this._maskTextures = preAllocateTextures(gl, 3);
   }
 
+  // apply(form: CanvasForm, frameContext: EffectFrameContext, _tracklets: Tracklet[]) {
+  //   const { frameIndex } = frameContext;
+  //   const gl = this._gl;
+  //   const program = this._program;
+
+  //   if (!program) {
+  //     return;
+  //   }
+
+  //   if (frameContext.resolution === null) {
+  //     return
+  //   }
+
+  //   invariant(gl !== null, 'WebGL2 context is required');
+  //   gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  //   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  //   // const blockSize = [5, 10, 15, 20, 25, 30][frameContext.resolution];
+  //   // const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
+
+  //   const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][frameContext.resolution];
+
+  //   const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][this.variant];
+
+  //   // dynamic uniforms per frame
+  //   gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
+  //   // gl.uniform1f(this._marginSizeUniformLocation, 10.0);
+  //   gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+  //   gl.uniform1f(this._marginSizeUniformLocation, marginSize);
+
+  //   gl.activeTexture(gl.TEXTURE0);
+  //   gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);
+  //   gl.texImage2D(
+  //     gl.TEXTURE_2D,
+  //     0,
+  //     gl.RGBA,
+  //     frameContext.width,
+  //     frameContext.height,
+  //     0,
+  //     gl.RGBA,
+  //     gl.UNSIGNED_BYTE,
+  //     frameContext.frame,
+  //   );
+
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+
+  //   if (frameContext?.startFrame === null || frameContext?.endFrame === null) {
+  //     return;
+  //   }
+
+  //   if (frameIndex >= frameContext?.startFrame && frameIndex <= frameContext?.endFrame) {
+  //     // Create and bind 2D textures for each mask
+  //     frameContext.masks.forEach((mask, index) => {
+  //       const decodedMask = decode([mask.bitmap as RLEObject]);
+  //       const maskData = decodedMask.data as Uint8Array;
+  //       gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+  //       gl.bindTexture(gl.TEXTURE_2D, this._maskTextures[index]);
+  //       gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  //       gl.texImage2D(
+  //         gl.TEXTURE_2D,
+  //         0,
+  //         gl.LUMINANCE,
+  //         frameContext.height,
+  //         frameContext.width,
+  //         0,
+  //         gl.LUMINANCE,
+  //         gl.UNSIGNED_BYTE,
+  //         maskData,
+  //       );
+
+  //       // dynamic uniforms per mask
+  //       gl.uniform1i(
+  //         gl.getUniformLocation(program, `uMaskTexture${index}`),
+  //         this._masksTextureUnitStart + index,
+  //       );
+  //     });
+
+  //     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  //     // Unbind textures
+  //     gl.bindTexture(gl.TEXTURE_2D, null);
+  //     frameContext.masks.forEach((_, index) => {
+  //       gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+  //       gl.bindTexture(gl.TEXTURE_2D, null);
+  //     });
+
+  //     const ctx = form.ctx;
+  //     invariant(this._canvas !== null, 'canvas is required');
+  //     ctx.drawImage(this._canvas, 0, 0);
+  //   }
+  // }
+
+
   apply(form: CanvasForm, frameContext: EffectFrameContext, _tracklets: Tracklet[]) {
     const { frameIndex } = frameContext;
     const gl = this._gl;
@@ -66,54 +160,46 @@ export default class MarginPixelEffect extends BaseGLEffect {
       return;
     }
 
-    if (frameContext.resolution === null) {
-      return
-    }
+    for (let index = 0; index < _tracklets.length; index++) {
+      const tracklet = _tracklets[index];
+      invariant(gl !== null, 'WebGL2 context is required');
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
 
-    invariant(gl !== null, 'WebGL2 context is required');
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+      const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][tracklet.resolution];
+      const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][tracklet.margin];
 
-    // const blockSize = [5, 10, 15, 20, 25, 30][frameContext.resolution];
-    // const marginSize = [5, 10, 15, 20, 25, 30][this.variant];
-   
-    const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][frameContext.resolution];
-    
-    const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][this.variant];
+      // dynamic uniforms per frame
+      gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
+      gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+      gl.uniform1f(this._marginSizeUniformLocation, marginSize);
 
-    // dynamic uniforms per frame
-    gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
-    // gl.uniform1f(this._marginSizeUniformLocation, 10.0);
-    gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
-    gl.uniform1f(this._marginSizeUniformLocation, marginSize);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        frameContext.width,
+        frameContext.height,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        frameContext.frame,
+      );
 
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      frameContext.width,
-      frameContext.height,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      frameContext.frame,
-    );
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      if (frameIndex >= tracklet?.startFrame && frameIndex <= tracklet?.endFrame) {
+        // Create and bind 2D textures for each mask
+        // frameContext.masks.forEach((mask, index) => {
 
-
-    if (frameContext?.startFrame === null || frameContext?.endFrame === null) {
-      return;
-    }
-
-    if (frameIndex >= frameContext?.startFrame && frameIndex <= frameContext?.endFrame) {
-      // Create and bind 2D textures for each mask
-      frameContext.masks.forEach((mask, index) => {
-        const decodedMask = decode([mask.bitmap as RLEObject]);
+        const decodedMask = decode([frameContext.masks[index].bitmap as RLEObject]);
         const maskData = decodedMask.data as Uint8Array;
+
+        gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+        gl.uniform1f(this._marginSizeUniformLocation, marginSize);
         gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
         gl.bindTexture(gl.TEXTURE_2D, this._maskTextures[index]);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
@@ -134,20 +220,100 @@ export default class MarginPixelEffect extends BaseGLEffect {
           gl.getUniformLocation(program, `uMaskTexture${index}`),
           this._masksTextureUnitStart + index,
         );
-      });
+        // });
 
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      // Unbind textures
-      gl.bindTexture(gl.TEXTURE_2D, null);
-      frameContext.masks.forEach((_, index) => {
-        gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        // Unbind textures
         gl.bindTexture(gl.TEXTURE_2D, null);
-      });
+        tracklet.masks.forEach((_, index) => {
+          gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+          gl.bindTexture(gl.TEXTURE_2D, null);
+        });
 
-      const ctx = form.ctx;
-      invariant(this._canvas !== null, 'canvas is required');
-      ctx.drawImage(this._canvas, 0, 0);
+        const ctx = form.ctx;
+        invariant(this._canvas !== null, 'canvas is required');
+        ctx.drawImage(this._canvas, 0, 0);
+      }
     }
+
+    // for (const tracklet of _tracklets) {
+
+    //   invariant(gl !== null, 'WebGL2 context is required');
+    //   gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    //   gl.clear(gl.COLOR_BUFFER_BIT);
+
+    //   // const blockSize = [5, 10, 15, 20, 25, 30][this.variant];
+    //   // const marginSize = [5, 10, 15, 20, 25, 30][frameContext.margin];
+
+    //   const blockSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][tracklet.resolution];
+    //   const marginSize = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40][tracklet.margin];
+
+    //   // dynamic uniforms per frame
+    //   gl.uniform1i(this._numMasksUniformLocation, frameContext.masks.length);
+    //   gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+    //   gl.uniform1f(this._marginSizeUniformLocation, marginSize);
+
+    //   gl.activeTexture(gl.TEXTURE0);
+    //   gl.bindTexture(gl.TEXTURE_2D, this._frameTexture);
+    //   gl.texImage2D(
+    //     gl.TEXTURE_2D,
+    //     0,
+    //     gl.RGBA,
+    //     frameContext.width,
+    //     frameContext.height,
+    //     0,
+    //     gl.RGBA,
+    //     gl.UNSIGNED_BYTE,
+    //     frameContext.frame,
+    //   );
+
+    //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    //   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    //   if (frameIndex >= tracklet?.startFrame && frameIndex <= tracklet?.endFrame) {
+    //     // Create and bind 2D textures for each mask
+    //     // frameContext.masks.forEach((mask, index) => {
+
+    //     const decodedMask = decode([frameContext.masks[tracklet.id].bitmap as RLEObject]);
+    //     const maskData = decodedMask.data as Uint8Array;
+
+    //     gl.uniform1f(gl.getUniformLocation(program, 'uBlockSize'), blockSize);
+    //     gl.uniform1f(this._marginSizeUniformLocation, marginSize);
+    //     gl.activeTexture(gl.TEXTURE0 + tracklet.id + this._masksTextureUnitStart);
+    //     gl.bindTexture(gl.TEXTURE_2D, this._maskTextures[tracklet.id]);
+    //     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    //     gl.texImage2D(
+    //       gl.TEXTURE_2D,
+    //       0,
+    //       gl.LUMINANCE,
+    //       frameContext.height,
+    //       frameContext.width,
+    //       0,
+    //       gl.LUMINANCE,
+    //       gl.UNSIGNED_BYTE,
+    //       maskData,
+    //     );
+
+    //     // dynamic uniforms per mask
+    //     gl.uniform1i(
+    //       gl.getUniformLocation(program, `uMaskTexture${tracklet.id}`),
+    //       this._masksTextureUnitStart + tracklet.id,
+    //     );
+    //     // });
+
+    //     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    //     // Unbind textures
+    //     gl.bindTexture(gl.TEXTURE_2D, null);
+    //     tracklet.masks.forEach((_, index) => {
+    //       gl.activeTexture(gl.TEXTURE0 + index + this._masksTextureUnitStart);
+    //       gl.bindTexture(gl.TEXTURE_2D, null);
+    //     });
+
+    //     const ctx = form.ctx;
+    //     invariant(this._canvas !== null, 'canvas is required');
+    //     ctx.drawImage(this._canvas, 0, 0);
+    //   }
+    // }
   }
 
   async cleanup(): Promise<void> {

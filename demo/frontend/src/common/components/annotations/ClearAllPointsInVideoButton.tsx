@@ -70,10 +70,10 @@ export default function ClearAllPointsInVideoButton({onRestart}: Props) {
       await restartSession();
     }
     video.frame = 0;
-    video?.startFrame(0);
-    video?.endFrame(video.numberOfFrames);
-    video.margin(5);
-    video.resolution(5);
+    // video?.startFrame(0);
+    // video?.endFrame(video.numberOfFrames);
+    // video.margin(5);
+    // video.resolution(5);
     setEndFrame(video.numberOfFrames);
     setStartFrame(0);
     setMultiRange([0, vidoeDuration]);

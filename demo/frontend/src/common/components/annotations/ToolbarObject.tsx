@@ -82,7 +82,7 @@ export default function ToolbarObject({
         />
       }
       isMobile={isMobile}>
-      <ObjectActions objectId={tracklet.id} active={isActive} />
+      <ObjectActions objectId={tracklet.id} active={isActive} tracklet={tracklet}/>
     </ToolbarObjectContainer>
   );
 }

@@ -20,7 +20,11 @@ import useVideo from '@/common/components/video/editor/useVideo';
 import {BaseTracklet} from '@/common/tracker/Tracker';
 import {decodeStream} from '@/common/codecs/VideoDecoder';
 import {streamFile} from '@/common/utils/FileUtils';
-import {streamingStateAtom, VideoData} from '@/demo/atoms';
+import {
+  activeTrackletObjectAtom,
+  streamingStateAtom,
+  VideoData,
+} from '@/demo/atoms';
 import useSettingsContext from '@/settings/useSettingsContext';
 import {m, spacing} from '@/theme/tokens.stylex';
 import stylex from '@stylexjs/stylex';
@@ -42,20 +46,19 @@ const styles = stylex.create({
 
 type Props = {
   inputVideo: VideoData;
+  objectId: number;
 };
 
-export default function TrackletsAnnotation({inputVideo}: Props) {
+export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
   const video = useVideo();
+  const setEffect = useVideoEffect();
   const tracklets = useTracklets();
   const streamingState = useAtomValue(streamingStateAtom);
-  const setEffect = useVideoEffect();
+
+  const activeTracklet = useAtomValue(activeTrackletObjectAtom)!;
 
   const {
-    resolution,
-    setResolution,
-    margin,
     setMargin,
-    multiRange,
     setMultiRange,
     setStartFrame,
     setEndFrame,
@@ -86,27 +89,33 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
   // });
 
   useEffect(() => {
-    const getMetaData = async () => {
-      const fileStream = streamFile(inputVideo.url, {
-        credentials: 'same-origin',
-        cache: 'no-store',
-      });
-
-      const data = await decodeStream(fileStream, async progress => {
-        return progress;
-      });
-
-      setFrameData(data);
-      setStartFrame(0);
-      setEndFrame(data?.numFrames);
-      video?.startFrame(0);
-      video?.endFrame(data?.numFrames);
-    };
-
     getMetaData();
     setMultiRange([0, Math.floor(duration)]);
     setVidoeDuration(Math.floor(duration));
   }, [inputVideo.url, duration, video]);
+
+  useEffect(() => {
+    if (activeTracklet !== null && duration && frameData?.numFrames) {
+      video?.updateObject(objectId, 'endFrame', frameData?.numFrames);
+      video?.updateObject(objectId, 'endVideoTime', Math.floor(duration));
+    }
+  }, [frameData, duration]);
+
+  const getMetaData = async () => {
+    const fileStream = streamFile(inputVideo.url, {
+      credentials: 'same-origin',
+      cache: 'no-store',
+    });
+
+    const data = await decodeStream(fileStream, async progress => {
+      return progress;
+    });
+    setFrameData(data);
+    setStartFrame(0);
+    setEndFrame(data?.numFrames);
+    video?.startFrame(objectId, 0);
+    video?.endFrame(objectId, data?.numFrames);
+  };
 
   return (
     <div {...stylex.props(styles.container(streamingState))}>
@@ -126,8 +135,8 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
               min={0}
               max={Math.floor(duration)} // video duration
               step={0.1}
-              minValue={multiRange[0]}
-              maxValue={multiRange[1]}
+              minValue={activeTracklet?.startVideoTime}
+              maxValue={activeTracklet?.endVideoTime}
               preventWheel={true}
               onChange={e => {
                 const startFrame = Math.round(
@@ -136,17 +145,30 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
                 const endFrame = Math.round(
                   e.maxValue * (frameData?.numFrames / Math.floor(duration)),
                 );
-                video?.startFrame(startFrame);
-                video?.endFrame(endFrame);
-                video?.resolution(resolution);
-                video?.margin(margin);
+
+                video?.updateObject(objectId, 'startFrame', startFrame);
+                video?.updateObject(objectId, 'endFrame', endFrame);
+                video?.updateObject(
+                  objectId,
+                  'resolution',
+                  activeTracklet?.resolution,
+                );
+
+                video?.updateObject(objectId, 'startVideoTime', e.minValue);
+                video?.updateObject(objectId, 'endVideoTime', e.maxValue);
+                video?.updateObject(objectId, 'margin', activeTracklet?.margin);
+
+                video?.startFrame(objectId, startFrame);
+                video?.endFrame(objectId, endFrame);
+                video?.resolution(objectId, activeTracklet?.resolution);
+                video?.margin(objectId, activeTracklet?.margin);
 
                 setMultiRange([e.minValue, e.maxValue]);
                 setStartFrame(startFrame);
                 setEndFrame(endFrame);
 
                 setEffect('PixelateMask', 1, {
-                  variant: resolution,
+                  variant: activeTracklet?.resolution,
                 });
               }}
             />
@@ -154,20 +176,31 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
 
           <div className="mt-3">
             <h6 className="font-semibold">Mosaic Resoluation</h6>
-            <div className='sam2-range'>
+            <div className="sam2-range">
               <input
                 type="range"
                 min={5}
                 max={30}
                 name="resolution"
-                value={resolution}
+                value={activeTracklet?.resolution}
                 onChange={e => {
-                  setResolution(parseInt(e.target.value));
-                  video?.margin(margin);
+                  video?.margin(objectId, activeTracklet?.margin);
+                  video?.updateObject(
+                    objectId,
+                    'margin',
+                    activeTracklet?.margin,
+                  );
+
                   setEffect('PixelateMask', 1, {
                     variant: parseInt(e.target.value),
                   });
-                  video?.resolution(parseInt(e.target.value));
+
+                  video?.updateObject(
+                    objectId,
+                    'resolution',
+                    parseInt(e.target.value),
+                  );
+                  video?.resolution(objectId, parseInt(e.target.value));
                 }}
                 className="range w-full h-3 cursor-pointer"
                 // step={0.5}
@@ -186,19 +219,24 @@ export default function TrackletsAnnotation({inputVideo}: Props) {
           {/* Margin Range */}
           <div className="mt-3">
             <h6 className="font-semibold">Mosaic Margin</h6>
-            <div className='sam2-range'>
+            <div className="sam2-range">
               <input
                 type="range"
                 min={5}
                 max={30}
                 name="margin"
-                value={margin}
+                value={activeTracklet?.margin}
                 onChange={e => {
                   setMargin(parseInt(e.target.value));
                   setEffect('MarginPixel', 1, {
                     variant: parseInt(e.target.value),
                   });
-                  video?.margin(parseInt(e.target.value));
+                  video?.margin(objectId, parseInt(e.target.value));
+                  video?.updateObject(
+                    objectId,
+                    'margin',
+                    parseInt(e.target.value),
+                  );
                 }}
                 className="range w-full cursor-pointer h-3"
                 // step={0.5}

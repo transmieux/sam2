@@ -108,6 +108,9 @@ export default class VideoWorkerContext {
   private endFrame: number | null = 100;
   private resolution: number | null = 1;
   private margin: number | null = 1;
+  private startVideoTime: number = 0;
+  private endVideoTime: number = 10;
+  private objectId: number = 0;
 
   private _effects: Effect[];
   private _tracklets: Tracklet[] = [];
@@ -127,6 +130,18 @@ export default class VideoWorkerContext {
     this.margin = value;
   };
 
+  public setStartVideoTime: (value: number) => void = (value) => {
+    this.startVideoTime = value;
+  };
+
+  public setEndVideoTime: (value: number) => void = (value) => {
+    this.endVideoTime = value;
+  };
+
+  public setObjectId: (value: number) => void = (value) => {
+    this.objectId = value;
+  };
+
   public get width(): number {
     return this._decodedVideo?.width ?? 0;
   }
@@ -137,6 +152,10 @@ export default class VideoWorkerContext {
 
   public get frameIndex(): number {
     return this._frameIndex;
+  }
+
+  public get activeObjectId(): number {
+    return this.objectId;
   }
 
   public get currentFrame(): VideoFrame | null {
@@ -698,7 +717,10 @@ export default class VideoWorkerContext {
         startFrame: this.startFrame,
         endFrame: this.endFrame,
         resolution: this.resolution,
-        margin: this.margin
+        margin: this.margin,
+        startVideoTime: this.startVideoTime,
+        endVideoTime: this.endVideoTime,
+        objectId:this.objectId
       };
 
       // Allows animation within a single frame.
@@ -853,7 +875,8 @@ export default class VideoWorkerContext {
       } else if (i === 1) {
         this._stats.effect1?.begin();
       }
-      const effectdata = { ...effectParams, startFrame: this.startFrame, endFrame: this.endFrame, resolution: this.resolution, margin: this.margin }
+
+      const effectdata = { ...effectParams, startFrame: this.startFrame, endFrame: this.endFrame, resolution: this.resolution, margin: this.margin, startVideoTime: this.startVideoTime, endVideoTime: this.endVideoTime, objectId: this.objectId }
       effect.apply(form, effectdata, tracklets);
 
       if (i === 0) {
