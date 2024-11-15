@@ -174,9 +174,9 @@ export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
             />
           </div>
 
-          <div className="mt-3">
+          <div className="mt-5">
             <h6 className="font-semibold">Mosaic Resoluation</h6>
-            <div className="sam2-range">
+            <div className="slider-container">
               <input
                 type="range"
                 min={5}
@@ -190,7 +190,6 @@ export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
                     'margin',
                     activeTracklet?.margin,
                   );
-
                   setEffect('PixelateMask', 1, {
                     variant: parseInt(e.target.value),
                   });
@@ -202,16 +201,31 @@ export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
                   );
                   video?.resolution(objectId, parseInt(e.target.value));
                 }}
-                className="range w-full h-3 cursor-pointer"
-                // step={0.5}
-                step={5}
-                aria-orientation="horizontal"
-                id="steps-range-slider-usage"
+                onInput={(e: any) => {
+                  const tooltip = e.target.nextElementSibling;
+                  const val = e.target.value;
+                  const newPosition =
+                    ((val - e.target.min) / (e.target.max - e.target.min)) *
+                    100;
+                  tooltip.style.left = `calc(${newPosition}% - 10px)`;
+                  tooltip.textContent = val;
+                }}
+                className="range w-full h-3 cursor-pointer custom-range"
+                step={1}
               />
-              <div className="flex w-full justify-between px-2 text-xs">
-                {resolutionNum.map(num => (
-                  <span key={num.value}>{num.label}</span>
-                ))}
+              <div className="tooltip">5</div>
+              <div className="range-ticks">
+                {[...Array(26)].map((_, index) => {
+                  const value = index + 5;
+                  const isTick = value % 5 === 0;
+                  return (
+                    <span
+                      key={value}
+                      className={`tick ${isTick ? 'major' : 'minor'}`}>
+                      {isTick && value}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -219,7 +233,7 @@ export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
           {/* Margin Range */}
           <div className="mt-3">
             <h6 className="font-semibold">Mosaic Margin</h6>
-            <div className="sam2-range">
+            <div className="slider-container">
               <input
                 type="range"
                 min={5}
@@ -238,13 +252,30 @@ export default function TrackletsAnnotation({inputVideo, objectId}: Props) {
                     parseInt(e.target.value),
                   );
                 }}
-                className="range w-full cursor-pointer h-3"
-                // step={0.5}
-                step={5}
+                className="range w-full cursor-pointer h-3 custom-range"
+                step={1}
+                onInput={(e: any) => {
+                  const tooltip = e.target.nextElementSibling;
+                  const val = e.target.value;
+                  const newPosition =
+                    ((val - e.target.min) / (e.target.max - e.target.min)) *
+                    100;
+                  tooltip.style.left = `calc(${newPosition}% - 10px)`;
+                  tooltip.textContent = val;
+                }}
               />
-              <div className="flex w-full justify-between px-2 text-xs">
-                {resolutionNum.map(num => {
-                  return <span>{num.label}</span>;
+              <div className="tooltip">5</div>
+              <div className="range-ticks">
+                {[...Array(26)].map((_, index) => {
+                  const value = index + 5;
+                  const isTick = value % 5 === 0;
+                  return (
+                    <span
+                      key={value}
+                      className={`tick ${isTick ? 'major' : 'minor'}`}>
+                      {isTick && value}
+                    </span>
+                  );
                 })}
               </div>
             </div>
