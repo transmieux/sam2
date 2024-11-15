@@ -22,6 +22,13 @@ import {RLEObject} from '@/jscocotools/mask';
 export type Point = [x: number, y: number];
 
 export type SegmentationPoint = [...point: Point, label: 0 | 1];
+export type TypeOfValue =
+  | "resolution"
+  | "margin"
+  | "startFrame"
+  | "endFrame"
+  | "startVideoTime"
+  | "endVideoTime";
 
 export type FramePoints = Array<SegmentationPoint> | undefined;
 
@@ -42,6 +49,12 @@ export type Tracklet = {
   points: FramePoints[];
   masks: Mask[];
   isInitialized: boolean;
+  resolution: number,
+  margin: number,
+  startFrame: number,
+  endFrame: number
+  startVideoTime: number
+  endVideoTime: number
 };
 
 export type BaseTracklet = Omit<Tracklet, 'masks'> & {
@@ -96,6 +109,7 @@ export abstract class Tracker implements ITracker {
   abstract streamMasks(frameIndex: number): Promise<void>;
   abstract abortStreamMasks(): void;
   abstract enableStats(): void;
+  abstract updateObject(objectId:number, type:TypeOfValue, value:number): void;
 
   // PRIVATE FUNCTIONS
 

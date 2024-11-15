@@ -62,14 +62,14 @@ self.addEventListener(
 
         // Filmstrip
         case 'filmstrip': {
-          const {width, height} = event.data;
+          const { width, height } = event.data;
           await context.createFilmstrip(width, height);
           break;
         }
 
         // Effects
         case 'setEffect': {
-          const {name, index, options} = event.data;
+          const { name, index, options } = event.data;
           await context.setEffect(name, index, options);
           break;
         }
@@ -89,7 +89,7 @@ self.addEventListener(
 
         // Tracker
         case 'initializeTracker': {
-          const {name, options} = event.data;
+          const { name, options } = event.data;
           const Tracker = TRACKER_MAPPING[name];
           // Update the endpoint for the streaming API
           tracker = new Tracker(context, options);
@@ -100,31 +100,53 @@ self.addEventListener(
         }
 
         case 'startFrame': {
-          const {frame} = event.data;
-          context.setStartFrame(frame || 0)
+          const { frame } = event.data;
+          context.setStartFrame(frame || 0);
+          // tracker?.updateObject(objectId, 'startFrame', frame);
           break;
         }
 
         case 'endFrame': {
-          const {frame} = event.data;
-          context.setEndFrame(frame || 100)
+          const { frame } = event.data;
+          context.setEndFrame(frame || 200);
+          // tracker?.updateObject(objectId, 'endFrame', frame);
           break;
         }
 
         case 'resolution': {
-          const {num} = event.data;
-          context.setResolution(num || 1)
+          const { num } = event.data;
+          context.setResolution(num || 1);
+          // tracker?.updateObject(objectId, 'resolution', num);
           break;
         }
 
         case 'margin': {
-          const {num} = event.data;
-          context.setMargin(num || 1)
+          const { num } = event.data;
+          context.setMargin(num || 1);
+          // tracker?.updateObject(objectId, 'margin', num);
           break;
         }
 
+        case 'startVideoTime': {
+          const { time } = event.data;
+          context.setMargin(time || 1);
+          // tracker?.updateObject(objectId, 'startVideoTime', time);
+          break;
+        }
+
+        case 'endVideoTime': {
+          const { time } = event.data;
+          context.setMargin(time || 10);
+          // tracker?.updateObject(objectId, 'endVideoTime', time);
+          break;
+        }
+        case 'objectId': {
+          const { id } = event.data;
+          context.setObjectId(id);
+          break;
+        }
         case 'startSession': {
-          const {videoUrl} = event.data;
+          const { videoUrl } = event.data;
           await tracker?.startSession(videoUrl);
           break;
         }
@@ -138,13 +160,18 @@ self.addEventListener(
           tracker?.closeSession();
           break;
         case 'updatePoints': {
-          const {frameIndex, objectId, points} = event.data;
+          const { frameIndex, objectId, points } = event.data;
           context.allowEffectAnimation(true, objectId, points);
           await tracker?.updatePoints(frameIndex, objectId, points);
           break;
         }
+        case 'updateObject': {
+          const { objectId, type, value } = event.data;
+          tracker?.updateObject(objectId, type, value);
+          break;
+        }
         case 'clearPointsInFrame': {
-          const {frameIndex, objectId} = event.data;
+          const { frameIndex, objectId } = event.data;
           await tracker?.clearPointsInFrame(frameIndex, objectId);
           break;
         }
@@ -152,7 +179,7 @@ self.addEventListener(
           await tracker?.clearPointsInVideo();
           break;
         case 'streamMasks': {
-          const {frameIndex} = event.data;
+          const { frameIndex } = event.data;
           context.allowEffectAnimation(false);
           await tracker?.streamMasks(frameIndex);
           break;

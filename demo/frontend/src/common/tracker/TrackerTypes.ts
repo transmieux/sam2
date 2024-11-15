@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SegmentationPoint} from '@/common/tracker/Tracker';
+import { SegmentationPoint, TypeOfValue } from '@/common/tracker/Tracker';
 import {TrackerOptions, Trackers} from '@/common/tracker/Trackers';
 import {
   AddPointsEvent,
@@ -68,6 +68,16 @@ export type UpdatePointsRequest = Request<
     points: SegmentationPoint[];
   }
 >;
+
+export type UpdateObjectRequest = Request<
+  'updateObject',
+  {
+    objectId: number;
+    type: TypeOfValue;
+    value: number;
+  }
+>;
+
 export type ClearPointsInFrameRequest = Request<
   'clearPointsInFrame',
   {
@@ -93,6 +103,7 @@ export type TrackerRequest =
   | CreateTrackletRequest
   | DeleteTrackletRequest
   | UpdatePointsRequest
+  | UpdateObjectRequest
   | ClearPointsInFrameRequest
   | ClearPointsInVideoRequest
   | StreamMasksRequest

@@ -27,9 +27,12 @@ export default function AddObjectButton() {
 
   async function addObject() {
     enqueueMessage('addObjectClick');
-    const tracklet = await video?.createTracklet();
+    let tracklet = await video?.createTracklet();
     if (tracklet != null) {
+      tracklet.endFrame = video?.numberOfFrames!;
       setActiveTrackletId(tracklet.id);
+      video?.objectId(tracklet.id);
+      video?.updateObject(tracklet.id, 'endFrame', video?.numberOfFrames)
       setLabelType('positive');
     }
   }

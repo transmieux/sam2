@@ -19,6 +19,7 @@ import {
   BaseTracklet,
   SegmentationPoint,
   StreamingState,
+  TypeOfValue,
 } from '@/common/tracker/Tracker';
 import {
   AbortStreamMasksRequest,
@@ -40,6 +41,7 @@ import {
   TrackerResponseMessageEvent,
   TrackletCreatedResponse,
   TrackletDeletedResponse,
+  UpdateObjectRequest,
   UpdatePointsRequest,
 } from '@/common/tracker/TrackerTypes';
 import {TrackerOptions, Trackers} from '@/common/tracker/Trackers';
@@ -334,20 +336,32 @@ export default class VideoWorkerBridge extends EventEmitter<VideoWorkerEventMap>
     });
   }
 
-  startFrame(frame: number): void {
-    this.sendRequest('startFrame', { frame })
+  startFrame(objectId: number, frame: number): void {
+    this.sendRequest('startFrame', { objectId, frame })
   }
 
-  endFrame(frame: number): void {
-    this.sendRequest('endFrame', { frame })
+  endFrame(objectId: number, frame: number): void {
+    this.sendRequest('endFrame', { objectId, frame })
   }
 
-  resolution(num: number): void {
-    this.sendRequest('resolution', { num })
+  resolution(objectId: number, num: number): void {
+    this.sendRequest('resolution', { objectId, num })
   }
 
-  margin(num: number): void {
-    this.sendRequest('margin', { num })
+  margin(objectId: number, num: number): void {
+    this.sendRequest('margin', { objectId, num })
+  }
+
+  startVideoTime(objectId: number, time: number): void {
+    this.sendRequest('startVideoTime', { objectId, time })
+  }
+
+  endVideoTime(objectId: number, time: number): void {
+    this.sendRequest('endVideoTime', { objectId, time })
+  }
+
+  objectId(id: number): void {
+    this.sendRequest('objectId', { id })
   }
 
 
@@ -434,6 +448,14 @@ export default class VideoWorkerBridge extends EventEmitter<VideoWorkerEventMap>
         objectId,
         points,
       });
+    });
+  }
+
+  updateObject(objectId: number, type: TypeOfValue, value: number) {
+    return this.sendRequest<UpdateObjectRequest>('updateObject', {
+      objectId,
+      type,
+      value
     });
   }
 

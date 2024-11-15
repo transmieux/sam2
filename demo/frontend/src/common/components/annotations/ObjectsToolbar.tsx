@@ -29,6 +29,7 @@ import {
   trackletObjectsAtom,
 } from '@/demo/atoms';
 import {useAtomValue, useSetAtom} from 'jotai';
+import useVideo from '../video/editor/useVideo';
 
 type Props = {
   onTabChange: (newIndex: number) => void;
@@ -41,6 +42,7 @@ export default function ObjectsToolbar({onTabChange}: Props) {
   const isFirstClickMade = useAtomValue(isFirstClickMadeAtom);
   const isObjectLimitReached = useAtomValue(isTrackletObjectLimitReachedAtom);
   const isAddObjectEnabled = useAtomValue(isAddObjectEnabledAtom);
+  const video = useVideo();
 
   if (!isFirstClickMade) {
     return <FirstClickView />;
@@ -58,7 +60,10 @@ export default function ObjectsToolbar({onTabChange}: Props) {
               tracklet={tracklet}
               isActive={activeTracklet?.id === tracklet.id}
               onClick={() => {
-                setActiveTrackletId(tracklet.id);
+                if (activeTracklet !== null) {
+                  setActiveTrackletId(tracklet.id);
+                  video?.objectId(tracklet?.id);
+                }
               }}
             />
           );

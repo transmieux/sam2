@@ -60,10 +60,10 @@ export default function useRestartSession() {
     onRestart?.();
     clearMessage();
     setIsLoading(false);
-    video?.startFrame(0);
-    video?.endFrame(video.numberOfFrames);
-    video.margin(5);
-    video.resolution(5);
+    // video?.startFrame(0);
+    // video?.endFrame(video.numberOfFrames);
+    // video.margin(5);
+    // video.resolution(5);
     setResolution(5);
     setMargin(5);
     setEndFrame(video.numberOfFrames);

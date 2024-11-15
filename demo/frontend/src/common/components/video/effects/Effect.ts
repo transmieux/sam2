@@ -59,6 +59,9 @@ export type EffectFrameContext = {
   endFrame: number | null
   resolution: number | null
   margin: number | null
+  startVideoTime: number | null
+  endVideoTime: number | null
+  objectId:number
 };
 
 export interface Effect {
