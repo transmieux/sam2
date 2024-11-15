@@ -18,7 +18,7 @@ import ClearAllPointsInVideoButton from '@/common/components/annotations/ClearAl
 import TrackAndPlayButton from '@/common/components/button/TrackAndPlayButton';
 import ToolbarBottomActionsWrapper from '@/common/components/toolbar/ToolbarBottomActionsWrapper';
 import {
-  EFFECT_TOOLBAR_INDEX,
+  // EFFECT_TOOLBAR_INDEX,
   OBJECT_TOOLBAR_INDEX,
 } from '@/common/components/toolbar/ToolbarConfig';
 import {streamingStateAtom} from '@/demo/atoms';

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import useScreenSize from '@/common/screen/useScreenSize';
-import {color, gradients} from '@/theme/tokens.stylex';
+import {
+  color,
+  //  gradients
+} from '@/theme/tokens.stylex';
 import {Close} from '@carbon/icons-react';
 import stylex from '@stylexjs/stylex';
 import {useAtomValue} from 'jotai';

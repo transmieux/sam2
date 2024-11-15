@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import GradientBorder from '@/common/components/button/GradientBorder';
+// import GradientBorder from '@/common/components/button/GradientBorder';
 import useScreenSize from '@/common/screen/useScreenSize';
 import {BLUE_PINK_FILL_BR} from '@/theme/gradientStyle';
 import type {CarbonIconType} from '@carbon/icons-react';
