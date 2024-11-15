@@ -116,28 +116,28 @@ self.addEventListener(
         case 'resolution': {
           const { num, objectId } = event.data;
           context.setResolution(num || 1);
-          tracker?.updateObject(objectId, 'resolution', num);
+          // tracker?.updateObject(objectId, 'resolution', num);
           break;
         }
 
         case 'margin': {
           const { num, objectId } = event.data;
           context.setMargin(num || 1);
-          tracker?.updateObject(objectId, 'margin', num);
+          // tracker?.updateObject(objectId, 'margin', num);
           break;
         }
 
         case 'startVideoTime': {
           const { time, objectId } = event.data;
           context.setMargin(time || 1);
-          tracker?.updateObject(objectId, 'startVideoTime', time);
+          // tracker?.updateObject(objectId, 'startVideoTime', time);
           break;
         }
 
         case 'endVideoTime': {
           const { time, objectId } = event.data;
           context.setMargin(time || 10);
-          tracker?.updateObject(objectId, 'endVideoTime', time);
+          // tracker?.updateObject(objectId, 'endVideoTime', time);
           break;
         }
         case 'objectId': {
